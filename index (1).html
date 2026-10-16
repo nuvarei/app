@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NUVAREI — Websites, web apps and accounting systems for your business</title>
+<meta name="description" content="NUVAREI builds websites, web apps, online stores and accounting systems for clothing, perfume, food and electronics businesses in Kuwait and the Gulf.">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1E2A56; --ink:#141A3A; --violet:#5B4FC9; --lavender:#9B8CF2; --mist:#E6E2FA;
+    --paper:#F4F4F8; --white:#FFFFFF; --text:#2A2F4A; --muted:#6B7090; --ok:#2E8B6E;
+    --radius:14px; --max:1140px;
+    --display:"Syne",sans-serif; --body:"Manrope",sans-serif;
+  }
+  html[dir="rtl"]{ --display:"IBM Plex Sans Arabic",sans-serif; --body:"IBM Plex Sans Arabic",sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--text);background:var(--paper);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--display);color:var(--ink);line-height:1.1;letter-spacing:-0.01em}
+  h2{font-size:clamp(1.9rem,3.6vw,2.8rem);font-weight:800}
+  h3{font-size:1.25rem;font-weight:700}
+  p{max-width:62ch}
+  a{color:inherit}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(20px,4vw,40px)}
+  section{padding:clamp(72px,9vw,120px) 0}
+  :focus-visible{outline:3px solid var(--lavender);outline-offset:3px}
+  .lead{font-size:1.15rem;color:var(--muted);max-width:52ch}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--body);font-weight:700;font-size:1rem;padding:15px 26px;border-radius:999px;border:2px solid transparent;cursor:pointer;text-decoration:none;transition:transform .15s,background .15s,border-color .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--violet);color:#fff}
+  .btn-primary:hover{background:#4A3FB5}
+  .btn-ghost{background:transparent;color:var(--navy);border-color:var(--navy)}
+  .btn-ghost:hover{background:var(--navy);color:#fff}
+  .btn-light{background:#fff;color:var(--navy)}
+  .btn-light:hover{background:var(--mist)}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(244,244,248,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(30,42,86,.08)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px;gap:20px}
+  .brand img{height:36px;width:auto}
+  .nav-links{display:flex;gap:28px;list-style:none;align-items:center}
+  .nav-links a{text-decoration:none;font-weight:600;color:var(--navy);font-size:.95rem}
+  .nav-links a:hover{color:var(--violet)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .lang{background:transparent;border:1.5px solid var(--navy);color:var(--navy);border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer;font-family:var(--body);font-size:.85rem}
+  .burger{display:none;background:none;border:0;cursor:pointer;width:42px;height:42px;border-radius:10px}
+  .burger span{display:block;width:22px;height:2.5px;background:var(--navy);margin:5px auto;border-radius:2px}
+  @media(max-width:860px){
+    .nav-links{display:none;position:absolute;top:76px;left:0;right:0;background:var(--paper);flex-direction:column;padding:18px 24px 26px;gap:18px;border-bottom:1px solid rgba(30,42,86,.1);align-items:flex-start}
+    .nav-links.open{display:flex}
+    .burger{display:block}
+    .nav-right .btn{display:none}
+  }
+
+  /* Hero */
+  .hero{padding:clamp(60px,8vw,110px) 0 clamp(60px,7vw,90px);position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.9rem);font-weight:800;line-height:1.02;color:var(--navy);position:relative;max-width:12ch}
+  .hero h1 .layer{position:relative;display:inline-block}
+  .hero h1 .layer::before{content:attr(data-text);position:absolute;inset-inline-start:-6px;top:7px;color:var(--lavender);z-index:-1;opacity:.85}
+  .hero .lead{margin:28px 0 36px}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-art{position:relative;min-height:380px}
+  .mock{position:absolute;background:#fff;border-radius:16px;box-shadow:0 30px 60px -30px rgba(30,42,86,.45),0 0 0 1px rgba(30,42,86,.06);overflow:hidden}
+  .mock-1{width:78%;height:66%;top:0;inset-inline-end:0}
+  .mock-2{width:52%;height:50%;bottom:0;inset-inline-start:0;background:var(--navy)}
+  .mock-bar{height:34px;background:var(--mist);display:flex;align-items:center;gap:6px;padding:0 12px}
+  .mock-bar i{width:9px;height:9px;border-radius:50%;background:var(--lavender);display:block}
+  .mock-body{padding:16px}
+  .mock-line{height:10px;border-radius:5px;background:var(--mist);margin-bottom:10px}
+  .mock-line.w1{width:60%}.mock-line.w2{width:85%}.mock-line.w3{width:40%}
+  .mock-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+  .mock-cards div{height:54px;border-radius:8px;background:var(--paper);border:1px solid var(--mist)}
+  .mock-2 .mock-body{padding:18px;color:#fff;font-family:var(--display)}
+  .mock-2 .num{font-size:1.9rem;font-weight:800;line-height:1}
+  .mock-2 .lbl{font-size:.8rem;opacity:.75;margin-top:4px;font-family:var(--body)}
+  .mock-2 .bars{display:flex;align-items:flex-end;gap:6px;height:70px;margin-top:16px}
+  .mock-2 .bars i{flex:1;background:var(--lavender);border-radius:4px 4px 0 0;display:block;animation:grow 1.2s ease both}
+  @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  .mock-2 .bars i{transform-origin:bottom}
+  .hero-badge{position:absolute;inset-inline-end:8%;bottom:14%;background:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 14px 30px -14px rgba(30,42,86,.5);font-weight:700;color:var(--navy);display:flex;align-items:center;gap:10px;font-size:.9rem}
+  .hero-badge b{width:10px;height:10px;border-radius:50%;background:var(--ok);display:block}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr}.hero-art{min-height:320px;margin-top:10px}.hero h1{max-width:none}}
+
+  /* Trust strip */
+  .strip{background:var(--navy);color:#fff;padding:22px 0}
+  .strip .wrap{display:flex;flex-wrap:wrap;gap:14px 40px;justify-content:center;align-items:center;font-weight:600;font-size:.95rem}
+  .strip span{opacity:.9;display:flex;gap:8px;align-items:center}
+  .strip span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--lavender)}
+
+  /* Services */
+  .section-head{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:end;margin-bottom:48px}
+  @media(max-width:800px){.section-head{grid-template-columns:1fr}}
+  .services{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  @media(max-width:760px){.services{grid-template-columns:1fr}}
+  .svc{background:#fff;border-radius:var(--radius);padding:30px;border:1px solid rgba(30,42,86,.08);display:flex;flex-direction:column;gap:14px;position:relative;transition:border-color .2s}
+  .svc:hover{border-color:var(--violet)}
+  .svc .ico{width:48px;height:48px;border-radius:12px;background:var(--mist);display:grid;place-items:center;color:var(--violet)}
+  .svc ul{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .svc li{font-size:.85rem;background:var(--paper);padding:5px 11px;border-radius:999px;color:var(--navy);font-weight:600}
+  .svc .link{margin-top:auto;font-weight:700;color:var(--violet);text-decoration:none}
+  .svc .link:hover{text-decoration:underline}
+
+  /* Industries */
+  .industries{background:var(--white)}
+  .ind-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  @media(max-width:900px){.ind-grid{grid-template-columns:repeat(2,1fr)}}
+  .ind{border-radius:var(--radius);padding:26px 22px;background:var(--paper);border:1px solid rgba(30,42,86,.06)}
+  .ind .emoji{font-size:2rem;line-height:1;margin-bottom:14px}
+  .ind h3{font-size:1.1rem;margin-bottom:6px}
+  .ind p{font-size:.95rem;color:var(--muted)}
+
+  /* Process */
+  .process{background:var(--navy);color:#fff}
+  .process h2{color:#fff}
+  .process .lead{color:rgba(255,255,255,.7)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:step}
+  @media(max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.steps{grid-template-columns:1fr}}
+  .step{padding-top:18px;border-top:2px solid rgba(155,140,242,.4);position:relative}
+  .step::before{counter-increment:step;content:counter(step);font-family:var(--display);font-weight:800;font-size:2.4rem;color:var(--lavender);display:block;margin-bottom:8px;line-height:1}
+  .step h3{color:#fff;margin-bottom:8px}
+  .step p{color:rgba(255,255,255,.72);font-size:.95rem}
+
+  /* Pricing */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  @media(max-width:900px){.plans{grid-template-columns:1fr}}
+  .plan{background:#fff;border-radius:var(--radius);padding:30px;border:1px solid rgba(30,42,86,.08);display:flex;flex-direction:column}
+  .plan.hot{border:2px solid var(--violet);box-shadow:0 24px 50px -30px rgba(91,79,201,.6)}
+  .plan .tag{align-self:flex-start;background:var(--violet);color:#fff;font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:14px}
+  .plan .price{font-family:var(--display);font-size:2.2rem;font-weight:800;color:var(--navy);margin:8px 0 2px}
+  .plan .price small{font-size:.9rem;color:var(--muted);font-family:var(--body);font-weight:600}
+  .plan .for{color:var(--muted);font-size:.95rem;margin-bottom:18px}
+  .plan ul{list-style:none;display:grid;gap:10px;margin-bottom:26px;font-size:.95rem}
+  .plan li{padding-inline-start:26px;position:relative}
+  .plan li::before{content:"";position:absolute;inset-inline-start:0;top:9px;width:14px;height:8px;border-inline-start:2.5px solid var(--violet);border-bottom:2.5px solid var(--violet);transform:rotate(-45deg)}
+  html[dir="rtl"] .plan li::before{transform:rotate(45deg) scaleX(-1)}
+  .plan .btn{margin-top:auto;justify-content:center}
+
+  /* Apply form */
+  .apply{background:var(--white)}
+  .apply-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:50px}
+  @media(max-width:900px){.apply-grid{grid-template-columns:1fr}}
+  .apply-side ul{list-style:none;display:grid;gap:16px;margin-top:26px}
+  .apply-side li{display:flex;gap:14px;align-items:flex-start}
+  .apply-side li b{flex:none;width:36px;height:36px;border-radius:10px;background:var(--mist);color:var(--violet);display:grid;place-items:center;font-family:var(--display)}
+  form{background:var(--paper);border-radius:18px;padding:clamp(22px,3vw,36px);border:1px solid rgba(30,42,86,.08)}
+  .progress{display:flex;gap:6px;margin-bottom:26px}
+  .progress i{flex:1;height:5px;border-radius:3px;background:var(--mist);transition:background .3s}
+  .progress i.on{background:var(--violet)}
+  .fstep{display:none}
+  .fstep.on{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .fstep h3{margin-bottom:6px}
+  .fstep .hint{color:var(--muted);font-size:.95rem;margin-bottom:22px}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.choices{grid-template-columns:1fr}}
+  .choice{position:relative}
+  .choice input{position:absolute;opacity:0;inset:0;cursor:pointer}
+  .choice label{display:block;background:#fff;border:2px solid rgba(30,42,86,.1);border-radius:12px;padding:16px;cursor:pointer;transition:border-color .15s,background .15s}
+  .choice label strong{display:block;color:var(--navy);font-weight:700}
+  .choice label span{font-size:.88rem;color:var(--muted)}
+  .choice input:checked+label{border-color:var(--violet);background:var(--mist)}
+  .choice input:focus-visible+label{outline:3px solid var(--lavender);outline-offset:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chips .choice label{padding:10px 16px;border-radius:999px;font-weight:600;color:var(--navy)}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-weight:700;font-size:.9rem;color:var(--navy);margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;font-family:var(--body);font-size:1rem;padding:13px 14px;border-radius:10px;border:2px solid rgba(30,42,86,.12);background:#fff;color:var(--text)}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--violet)}
+  .field textarea{min-height:110px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:520px){.row{grid-template-columns:1fr}}
+  .fnav{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+  .err{color:#B3261E;font-size:.9rem;margin-top:10px;min-height:1.2em}
+  .done{text-align:center;padding:30px 10px}
+  .done .check{width:70px;height:70px;border-radius:50%;background:var(--ok);margin:0 auto 18px;display:grid;place-items:center}
+  .done p{margin:0 auto 20px}
+  .done .ref{font-family:var(--display);font-weight:700;color:var(--navy);background:#fff;display:inline-block;padding:8px 16px;border-radius:8px;border:1px dashed var(--lavender)}
+
+  /* Footer */
+  footer{background:var(--ink);color:rgba(255,255,255,.75);padding:60px 0 30px}
+  .foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px;margin-bottom:40px}
+  @media(max-width:800px){.foot{grid-template-columns:1fr 1fr}}
+  .foot img{height:34px;filter:brightness(0) invert(1);opacity:.95;margin-bottom:14px}
+  .foot h4{color:#fff;font-family:var(--display);margin-bottom:12px}
+  .foot ul{list-style:none;display:grid;gap:8px;font-size:.95rem}
+  .foot a{text-decoration:none}
+  .foot a:hover{color:#fff}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:22px;font-size:.85rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="NUVAREI home"><img src="logo.png" alt="NUVAREI"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services" data-i="nav_services">Services</a></li>
+      <li><a href="#industries" data-i="nav_industries">Industries</a></li>
+      <li><a href="#process" data-i="nav_process">How it works</a></li>
+      <li><a href="#pricing" data-i="nav_pricing">Pricing</a></li>
+      <li><a href="#apply" data-i="nav_apply">Apply</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang" id="langBtn" aria-label="Switch language">العربية</button>
+      <a class="btn btn-primary" href="#apply" data-i="nav_cta">Start a project</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1><span class="layer" data-text="" data-i="hero_h1">We build the systems your business runs on</span></h1>
+      <p class="lead" data-i="hero_lead">Websites, web apps, online stores and accounting systems — designed, built and launched for clothing, perfume, food and electronics businesses that are ready for their next era.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#apply" data-i="hero_cta1">Apply for a service</a>
+        <a class="btn btn-ghost" href="#services" data-i="hero_cta2">See what we build</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="mock mock-1">
+        <div class="mock-bar"><i></i><i></i><i></i></div>
+        <div class="mock-body">
+          <div class="mock-line w1"></div><div class="mock-line w2"></div><div class="mock-line w3"></div>
+          <div class="mock-cards"><div></div><div></div><div></div></div>
+        </div>
+      </div>
+      <div class="mock mock-2">
+        <div class="mock-body">
+          <div class="num">12,480 <span style="font-size:.9rem;font-weight:600">KD</span></div>
+          <div class="lbl" data-i="hero_mock_lbl">Sales this month</div>
+          <div class="bars"><i style="height:40%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:80%"></i><i style="height:70%"></i><i style="height:100%"></i></div>
+        </div>
+      </div>
+      <div class="hero-badge"><b></b><span data-i="hero_badge">Store live · Orders syncing</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap">
+    <span data-i="strip1">Arabic & English, right to left ready</span>
+    <span data-i="strip2">KNET, Visa and Mastercard payments</span>
+    <span data-i="strip3">Works on every phone</span>
+    <span data-i="strip4">Hosted, secured and backed up</span>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i="svc_h2">One team for everything your business needs online</h2>
+      <p class="lead" data-i="svc_lead">Pick one service or combine them. Everything we build connects, so your store, your app and your accounts share the same data.</p>
+    </div>
+    <div class="services">
+      <article class="svc">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
+        <h3 data-i="svc1_h">Business websites</h3>
+        <p data-i="svc1_p">A fast, modern site that explains what you do, shows your work and brings customers to your door or your WhatsApp.</p>
+        <ul><li data-i="svc1_t1">Company sites</li><li data-i="svc1_t2">Landing pages</li><li data-i="svc1_t3">Booking pages</li><li>SEO</li></ul>
+        <a class="link" href="#apply" data-svc="website" data-i="svc_link">Request this service</a>
+      </article>
+      <article class="svc">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v20H6z"/><path d="M11 18h2"/></svg></div>
+        <h3 data-i="svc2_h">Web apps</h3>
+        <p data-i="svc2_p">Custom tools that run in the browser and on any phone — customer portals, internal dashboards, maintenance and request systems.</p>
+        <ul><li data-i="svc2_t1">Customer portals</li><li data-i="svc2_t2">Dashboards</li><li data-i="svc2_t3">Installable on phones</li></ul>
+        <a class="link" href="#apply" data-svc="webapp" data-i="svc_link">Request this service</a>
+      </article>
+      <article class="svc">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18l-2 12H5z"/><path d="M9 10v4M15 10v4"/></svg></div>
+        <h3 data-i="svc3_h">Online stores</h3>
+        <p data-i="svc3_p">Sell clothing, perfume, food or electronics with product variants, delivery zones, discount codes and local payment gateways.</p>
+        <ul><li data-i="svc3_t1">Product catalog</li><li>KNET</li><li data-i="svc3_t2">Delivery tracking</li><li data-i="svc3_t3">Instagram-ready</li></ul>
+        <a class="link" href="#apply" data-svc="store" data-i="svc_link">Request this service</a>
+      </article>
+      <article class="svc">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 14l3-3 2 2 3-4"/></svg></div>
+        <h3 data-i="svc4_h">Accounting systems</h3>
+        <p data-i="svc4_p">Invoices, expenses, stock, VAT-ready reports and a clear picture of profit — in Arabic and English, linked to your store.</p>
+        <ul><li data-i="svc4_t1">Invoicing</li><li data-i="svc4_t2">Inventory</li><li data-i="svc4_t3">Expense tracking</li><li data-i="svc4_t4">Reports</li></ul>
+        <a class="link" href="#apply" data-svc="accounting" data-i="svc_link">Request this service</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="industries" class="industries">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i="ind_h2">Built around how your industry actually sells</h2>
+      <p class="lead" data-i="ind_lead">We don't start from a blank template. Each industry gets the features it needs on day one.</p>
+    </div>
+    <div class="ind-grid">
+      <div class="ind"><div class="emoji">👗</div><h3 data-i="ind1_h">Clothing</h3><p data-i="ind1_p">Sizes, colours, lookbooks, returns and seasonal collections.</p></div>
+      <div class="ind"><div class="emoji">🌸</div><h3 data-i="ind2_h">Perfume</h3><p data-i="ind2_p">Bottle sizes, gift sets, samples and scent-note filters.</p></div>
+      <div class="ind"><div class="emoji">🍱</div><h3 data-i="ind3_h">Food</h3><p data-i="ind3_p">Menus, pre-orders, delivery slots and subscriptions.</p></div>
+      <div class="ind"><div class="emoji">📱</div><h3 data-i="ind4_h">Electronics</h3><p data-i="ind4_p">Specs comparison, warranties, serial tracking and installments.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="process">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i="pro_h2">From first message to launch in four steps</h2>
+      <p class="lead" data-i="pro_lead">You always know what's happening and what comes next.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><h3 data-i="pro1_h">Apply</h3><p data-i="pro1_p">Tell us what you need using the form below. It takes two minutes.</p></div>
+      <div class="step"><h3 data-i="pro2_h">Plan</h3><p data-i="pro2_p">We call you within one working day, agree the scope and send a fixed quote.</p></div>
+      <div class="step"><h3 data-i="pro3_h">Build</h3><p data-i="pro3_p">You see progress on a live preview link and give feedback as we go.</p></div>
+      <div class="step"><h3 data-i="pro4_h">Launch</h3><p data-i="pro4_p">We go live on your domain, train your team and stay on for support.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 data-i="pr_h2">Clear starting prices</h2>
+      <p class="lead" data-i="pr_lead">Every project is quoted after we talk, but this is where most projects land.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3 data-i="pl1_h">Website</h3>
+        <div class="price" data-i="pl1_price">from 150 <small>KD</small></div>
+        <p class="for" data-i="pl1_for">For businesses that need a professional presence.</p>
+        <ul><li data-i="pl1_1">Up to 6 pages</li><li data-i="pl1_2">Arabic and English</li><li data-i="pl1_3">Contact and WhatsApp forms</li><li data-i="pl1_4">Hosting and domain setup</li></ul>
+        <a class="btn btn-ghost" href="#apply" data-i="pl_cta">Choose this</a>
+      </div>
+      <div class="plan hot">
+        <span class="tag" data-i="pl2_tag">Most requested</span>
+        <h3 data-i="pl2_h">Online store</h3>
+        <div class="price" data-i="pl2_price">from 350 <small>KD</small></div>
+        <p class="for" data-i="pl2_for">For brands ready to sell online.</p>
+        <ul><li data-i="pl2_1">Unlimited products</li><li data-i="pl2_2">KNET and card payments</li><li data-i="pl2_3">Order and delivery management</li><li data-i="pl2_4">Admin panel and sales reports</li></ul>
+        <a class="btn btn-primary" href="#apply" data-i="pl_cta">Choose this</a>
+      </div>
+      <div class="plan">
+        <h3 data-i="pl3_h">Accounting system</h3>
+        <div class="price" data-i="pl3_price">from 400 <small>KD</small></div>
+        <p class="for" data-i="pl3_for">For businesses that want their numbers under control.</p>
+        <ul><li data-i="pl3_1">Invoices, quotes and receipts</li><li data-i="pl3_2">Inventory and suppliers</li><li data-i="pl3_3">Profit and expense reports</li><li data-i="pl3_4">Multi-user with roles</li></ul>
+        <a class="btn btn-ghost" href="#apply" data-i="pl_cta">Choose this</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="apply" class="apply">
+  <div class="wrap apply-grid">
+    <div class="apply-side">
+      <h2 data-i="ap_h2">Apply for a service</h2>
+      <p class="lead" data-i="ap_lead">Answer a few questions and we'll get back to you with a plan and a quote.</p>
+      <ul>
+        <li><b>1</b><div data-i="ap_s1">Choose the service you need</div></li>
+        <li><b>2</b><div data-i="ap_s2">Tell us about your business</div></li>
+        <li><b>3</b><div data-i="ap_s3">Leave your contact details</div></li>
+      </ul>
+    </div>
+
+    <form id="applyForm" novalidate>
+      <div class="progress"><i class="on"></i><i></i><i></i></div>
+
+      <div class="fstep on" data-step="1">
+        <h3 data-i="f1_h">What do you need?</h3>
+        <p class="hint" data-i="f1_hint">You can pick more than one.</p>
+        <div class="choices">
+          <div class="choice"><input type="checkbox" name="service" value="website" id="s1"><label for="s1"><strong data-i="svc1_h">Business website</strong><span data-i="f1_o1">Show your business online</span></label></div>
+          <div class="choice"><input type="checkbox" name="service" value="webapp" id="s2"><label for="s2"><strong data-i="svc2_h">Web app</strong><span data-i="f1_o2">A custom tool or portal</span></label></div>
+          <div class="choice"><input type="checkbox" name="service" value="store" id="s3"><label for="s3"><strong data-i="svc3_h">Online store</strong><span data-i="f1_o3">Sell products with payments</span></label></div>
+          <div class="choice"><input type="checkbox" name="service" value="accounting" id="s4"><label for="s4"><strong data-i="svc4_h">Accounting system</strong><span data-i="f1_o4">Invoices, stock and reports</span></label></div>
+        </div>
+        <div class="err" id="err1"></div>
+        <div class="fnav"><span></span><button type="button" class="btn btn-primary" data-next data-i="f_next">Continue</button></div>
+      </div>
+
+      <div class="fstep" data-step="2">
+        <h3 data-i="f2_h">About your business</h3>
+        <p class="hint" data-i="f2_hint">This helps us prepare the right features before we call.</p>
+        <div class="field"><label data-i="f2_ind">Industry</label>
+          <div class="chips">
+            <div class="choice"><input type="radio" name="industry" value="clothing" id="i1"><label for="i1" data-i="ind1_h">Clothing</label></div>
+            <div class="choice"><input type="radio" name="industry" value="perfume" id="i2"><label for="i2" data-i="ind2_h">Perfume</label></div>
+            <div class="choice"><input type="radio" name="industry" value="food" id="i3"><label for="i3" data-i="ind3_h">Food</label></div>
+            <div class="choice"><input type="radio" name="industry" value="electronics" id="i4"><label for="i4" data-i="ind4_h">Electronics</label></div>
+            <div class="choice"><input type="radio" name="industry" value="other" id="i5"><label for="i5" data-i="f2_other">Other</label></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field"><label for="bname" data-i="f2_bname">Business name</label><input id="bname" name="business" type="text" required></div>
+          <div class="field"><label for="budget" data-i="f2_budget">Budget range</label>
+            <select id="budget" name="budget">
+              <option value="" data-i="f2_b0">Not sure yet</option>
+              <option value="150-300">150 – 300 KD</option>
+              <option value="300-600">300 – 600 KD</option>
+              <option value="600-1200">600 – 1,200 KD</option>
+              <option value="1200+">1,200+ KD</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="details" data-i="f2_details">Tell us about the project</label><textarea id="details" name="details" data-i-ph="f2_details_ph" placeholder="What do you sell, who are your customers, and what should the system do?"></textarea></div>
+        <div class="err" id="err2"></div>
+        <div class="fnav"><button type="button" class="btn btn-ghost" data-prev data-i="f_back">Back</button><button type="button" class="btn btn-primary" data-next data-i="f_next">Continue</button></div>
+      </div>
+
+      <div class="fstep" data-step="3">
+        <h3 data-i="f3_h">How can we reach you?</h3>
+        <p class="hint" data-i="f3_hint">We'll contact you within one working day.</p>
+        <div class="row">
+          <div class="field"><label for="name" data-i="f3_name">Your name</label><input id="name" name="name" type="text" required autocomplete="name"></div>
+          <div class="field"><label for="phone" data-i="f3_phone">Phone / WhatsApp</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="+965"></div>
+        </div>
+        <div class="field"><label for="email" data-i="f3_email">Email</label><input id="email" name="email" type="email" autocomplete="email"></div>
+        <div class="field"><label for="contactvia" data-i="f3_via">Preferred contact</label>
+          <select id="contactvia" name="contactVia"><option value="whatsapp">WhatsApp</option><option value="call" data-i="f3_call">Phone call</option><option value="email" data-i="f3_mail">Email</option></select>
+        </div>
+        <div class="err" id="err3"></div>
+        <div class="fnav"><button type="button" class="btn btn-ghost" data-prev data-i="f_back">Back</button><button type="submit" class="btn btn-primary" id="submitBtn" data-i="f_submit">Send application</button></div>
+      </div>
+
+      <div class="fstep done" data-step="4">
+        <div class="check"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+        <h3 data-i="f4_h">Application sent</h3>
+        <p data-i="f4_p">Thanks — we've received your request and will contact you within one working day.</p>
+        <div class="ref"><span data-i="f4_ref">Reference</span>: <span id="refCode"></span></div>
+        <div style="margin-top:22px"><button type="button" class="btn btn-ghost" id="resetBtn" data-i="f4_again">Send another request</button></div>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <img src="logo.png" alt="NUVAREI">
+        <p style="font-size:.95rem;max-width:34ch" data-i="ft_about">Websites, web apps, online stores and accounting systems for businesses in Kuwait and the Gulf.</p>
+      </div>
+      <div><h4 data-i="nav_services">Services</h4><ul><li><a href="#services" data-i="svc1_h">Business websites</a></li><li><a href="#services" data-i="svc2_h">Web apps</a></li><li><a href="#services" data-i="svc3_h">Online stores</a></li><li><a href="#services" data-i="svc4_h">Accounting systems</a></li></ul></div>
+      <div><h4 data-i="ft_company">Company</h4><ul><li><a href="#process" data-i="nav_process">How it works</a></li><li><a href="#pricing" data-i="nav_pricing">Pricing</a></li><li><a href="#apply" data-i="nav_apply">Apply</a></li></ul></div>
+      <div><h4 data-i="ft_contact">Contact</h4><ul><li><a href="mailto:hello@nuvarei.com">hello@nuvarei.com</a></li><li><a href="https://wa.me/965" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="https://instagram.com/nuvarei" target="_blank" rel="noopener">Instagram</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> NUVAREI. <span data-i="ft_rights">All rights reserved.</span></span>
+      <span data-i="ft_tag">Built for your next era</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- Translations ---------- */
+const AR = {
+  nav_services:"الخدمات", nav_industries:"القطاعات", nav_process:"كيف نعمل", nav_pricing:"الأسعار", nav_apply:"اطلب خدمة", nav_cta:"ابدأ مشروعك",
+  hero_h1:"نبني الأنظمة التي يعمل عليها مشروعك", hero_lead:"مواقع إلكترونية، تطبيقات ويب، متاجر إلكترونية وأنظمة محاسبة — نصممها ونبنيها ونطلقها لمشاريع الملابس والعطور والأغذية والإلكترونيات الجاهزة لمرحلتها القادمة.",
+  hero_cta1:"اطلب خدمة", hero_cta2:"شاهد ما نبنيه", hero_mock_lbl:"مبيعات هذا الشهر", hero_badge:"المتجر مباشر · الطلبات تتزامن",
+  strip1:"عربي وإنجليزي مع دعم RTL", strip2:"الدفع عبر كي نت وفيزا وماستركارد", strip3:"يعمل على كل الهواتف", strip4:"استضافة وحماية ونسخ احتياطي",
+  svc_h2:"فريق واحد لكل ما يحتاجه مشروعك على الإنترنت", svc_lead:"اختر خدمة واحدة أو اجمع بينها. كل ما نبنيه مترابط، فالمتجر والتطبيق والحسابات تشترك في نفس البيانات.",
+  svc1_h:"مواقع الشركات", svc1_p:"موقع سريع وحديث يشرح ما تقدمه ويعرض أعمالك ويوصل العملاء إلى بابك أو واتسابك.", svc1_t1:"مواقع الشركات", svc1_t2:"صفحات هبوط", svc1_t3:"صفحات حجز",
+  svc2_h:"تطبيقات الويب", svc2_p:"أدوات مخصصة تعمل في المتصفح وعلى أي هاتف — بوابات عملاء، لوحات تحكم داخلية، وأنظمة طلبات وصيانة.", svc2_t1:"بوابات عملاء", svc2_t2:"لوحات تحكم", svc2_t3:"قابل للتثبيت على الهاتف",
+  svc3_h:"المتاجر الإلكترونية", svc3_p:"بِع الملابس والعطور والأغذية والإلكترونيات مع خيارات المنتجات ومناطق التوصيل وأكواد الخصم وبوابات الدفع المحلية.", svc3_t1:"كتالوج منتجات", svc3_t2:"تتبع التوصيل", svc3_t3:"جاهز لإنستغرام",
+  svc4_h:"أنظمة المحاسبة", svc4_p:"فواتير ومصروفات ومخزون وتقارير جاهزة للضريبة وصورة واضحة للأرباح — بالعربية والإنجليزية ومرتبطة بمتجرك.", svc4_t1:"الفوترة", svc4_t2:"المخزون", svc4_t3:"تتبع المصروفات", svc4_t4:"التقارير",
+  svc_link:"اطلب هذه الخدمة",
+  ind_h2:"مبني حول طريقة بيع قطاعك فعلاً", ind_lead:"لا نبدأ من قالب فارغ. كل قطاع يحصل على الميزات التي يحتاجها من اليوم الأول.",
+  ind1_h:"الملابس", ind1_p:"المقاسات والألوان والمجموعات الموسمية والإرجاع.", ind2_h:"العطور", ind2_p:"أحجام العبوات وأطقم الهدايا والعينات وفلاتر الروائح.", ind3_h:"الأغذية", ind3_p:"القوائم والطلب المسبق ومواعيد التوصيل والاشتراكات.", ind4_h:"الإلكترونيات", ind4_p:"مقارنة المواصفات والضمانات وتتبع الأرقام التسلسلية والتقسيط.",
+  pro_h2:"من أول رسالة إلى الإطلاق في أربع خطوات", pro_lead:"تعرف دائماً ما يحدث وما الخطوة التالية.",
+  pro1_h:"قدّم طلبك", pro1_p:"أخبرنا بما تحتاجه عبر النموذج أدناه. يستغرق دقيقتين.", pro2_h:"التخطيط", pro2_p:"نتصل بك خلال يوم عمل، نتفق على النطاق ونرسل عرض سعر ثابت.", pro3_h:"البناء", pro3_p:"تتابع التقدم عبر رابط معاينة مباشر وتعطي ملاحظاتك أولاً بأول.", pro4_h:"الإطلاق", pro4_p:"ننشر على نطاقك، ندرّب فريقك ونبقى معك للدعم.",
+  pr_h2:"أسعار بداية واضحة", pr_lead:"كل مشروع يُسعّر بعد الحديث معك، لكن هذا هو المدى المعتاد لمعظم المشاريع.",
+  pl1_h:"موقع إلكتروني", pl1_price:"من 150 <small>د.ك</small>", pl1_for:"للمشاريع التي تحتاج حضوراً احترافياً.", pl1_1:"حتى 6 صفحات", pl1_2:"عربي وإنجليزي", pl1_3:"نماذج تواصل وواتساب", pl1_4:"إعداد الاستضافة والنطاق",
+  pl2_tag:"الأكثر طلباً", pl2_h:"متجر إلكتروني", pl2_price:"من 350 <small>د.ك</small>", pl2_for:"للعلامات الجاهزة للبيع أونلاين.", pl2_1:"منتجات غير محدودة", pl2_2:"الدفع عبر كي نت والبطاقات", pl2_3:"إدارة الطلبات والتوصيل", pl2_4:"لوحة تحكم وتقارير مبيعات",
+  pl3_h:"نظام محاسبة", pl3_price:"من 400 <small>د.ك</small>", pl3_for:"للمشاريع التي تريد التحكم في أرقامها.", pl3_1:"فواتير وعروض أسعار وإيصالات", pl3_2:"المخزون والموردون", pl3_3:"تقارير الأرباح والمصروفات", pl3_4:"عدة مستخدمين بصلاحيات",
+  pl_cta:"اختر هذه الباقة",
+  ap_h2:"اطلب خدمة", ap_lead:"أجب عن بعض الأسئلة وسنعود إليك بخطة وعرض سعر.", ap_s1:"اختر الخدمة التي تحتاجها", ap_s2:"عرّفنا بمشروعك", ap_s3:"اترك بيانات التواصل",
+  f1_h:"ما الذي تحتاجه؟", f1_hint:"يمكنك اختيار أكثر من خدمة.", f1_o1:"اعرض مشروعك على الإنترنت", f1_o2:"أداة أو بوابة مخصصة", f1_o3:"بِع منتجاتك مع الدفع الإلكتروني", f1_o4:"فواتير ومخزون وتقارير",
+  f2_h:"عن مشروعك", f2_hint:"يساعدنا هذا في تجهيز الميزات المناسبة قبل الاتصال بك.", f2_ind:"القطاع", f2_other:"أخرى", f2_bname:"اسم المشروع", f2_budget:"الميزانية التقريبية", f2_b0:"غير متأكد بعد", f2_details:"حدّثنا عن المشروع", f2_details_ph:"ماذا تبيع، من هم عملاؤك، وماذا يجب أن يفعل النظام؟",
+  f3_h:"كيف نتواصل معك؟", f3_hint:"سنتواصل معك خلال يوم عمل واحد.", f3_name:"اسمك", f3_phone:"الهاتف / واتساب", f3_email:"البريد الإلكتروني", f3_via:"طريقة التواصل المفضلة", f3_call:"اتصال هاتفي", f3_mail:"البريد الإلكتروني",
+  f_next:"متابعة", f_back:"رجوع", f_submit:"إرسال الطلب",
+  f4_h:"تم إرسال الطلب", f4_p:"شكراً — استلمنا طلبك وسنتواصل معك خلال يوم عمل واحد.", f4_ref:"رقم المرجع", f4_again:"إرسال طلب آخر",
+  ft_about:"مواقع إلكترونية وتطبيقات ويب ومتاجر وأنظمة محاسبة للمشاريع في الكويت والخليج.", ft_company:"الشركة", ft_contact:"تواصل معنا", ft_rights:"جميع الحقوق محفوظة.", ft_tag:"مبني لمرحلتك القادمة",
+  err_svc:"اختر خدمة واحدة على الأقل.", err_biz:"اكتب اسم المشروع.", err_contact:"اكتب اسمك ورقم هاتفك.", err_phone:"أدخل رقم هاتف صحيحاً.", err_send:"تعذر إرسال الطلب. حاول مرة أخرى أو تواصل معنا عبر واتساب.", sending:"جارٍ الإرسال..."
+};
+const EN_ERR = {err_svc:"Pick at least one service.", err_biz:"Enter your business name.", err_contact:"Enter your name and phone number.", err_phone:"Enter a valid phone number.", err_send:"The request couldn't be sent. Try again or message us on WhatsApp.", sending:"Sending..."};
+const EN = {};
+document.querySelectorAll('[data-i]').forEach(el=>{ const k=el.dataset.i; if(!(k in EN)) EN[k]=el.innerHTML; });
+document.querySelectorAll('[data-i-ph]').forEach(el=>{ EN[el.dataset.iPh]=el.placeholder; });
+Object.assign(EN, EN_ERR);
+
+let lang = localStorage.getItem('nv_lang') || 'en';
+function t(k){ return (lang==='ar' ? AR[k] : EN[k]) || EN[k] || ''; }
+function applyLang(){
+  const dict = lang==='ar' ? AR : EN;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i]').forEach(el=>{ const v=dict[el.dataset.i]; if(v!==undefined) el.innerHTML=v; });
+  document.querySelectorAll('[data-i-ph]').forEach(el=>{ const v=dict[el.dataset.iPh]; if(v!==undefined) el.placeholder=v; });
+  const h=document.querySelector('.hero h1 .layer'); if(h) h.dataset.text=h.textContent;
+  document.getElementById('langBtn').textContent = lang==='ar' ? 'English' : 'العربية';
+  localStorage.setItem('nv_lang', lang);
+}
+document.getElementById('langBtn').addEventListener('click',()=>{ lang = lang==='ar' ? 'en' : 'ar'; applyLang(); });
+applyLang();
+
+/* ---------- Nav ---------- */
+const burger=document.getElementById('burger'), navLinks=document.getElementById('navLinks');
+burger.addEventListener('click',()=>{ const o=navLinks.classList.toggle('open'); burger.setAttribute('aria-expanded',o); });
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+document.getElementById('year').textContent=new Date().getFullYear();
+
+/* Service cards preselect form option */
+document.querySelectorAll('[data-svc]').forEach(a=>a.addEventListener('click',()=>{
+  const cb=document.querySelector(`input[name="service"][value="${a.dataset.svc}"]`); if(cb) cb.checked=true;
+}));
+
+/* ---------- Multi-step form ---------- */
+const form=document.getElementById('applyForm');
+const steps=[...form.querySelectorAll('.fstep')];
+const bars=[...form.querySelectorAll('.progress i')];
+let cur=1;
+function show(n){
+  cur=n;
+  steps.forEach(s=>s.classList.toggle('on', +s.dataset.step===n));
+  bars.forEach((b,i)=>b.classList.toggle('on', i<Math.min(n,3)));
+  form.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function validate(n){
+  const err=document.getElementById('err'+n); err.textContent='';
+  if(n===1 && !form.querySelector('input[name="service"]:checked')){ err.textContent=t('err_svc'); return false; }
+  if(n===2 && !form.business.value.trim()){ err.textContent=t('err_biz'); form.business.focus(); return false; }
+  if(n===3){
+    if(!form.name.value.trim() || !form.phone.value.trim()){ err.textContent=t('err_contact'); return false; }
+    if(!/^[+\d][\d\s-]{6,}$/.test(form.phone.value.trim())){ err.textContent=t('err_phone'); form.phone.focus(); return false; }
+  }
+  return true;
+}
+form.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click',()=>{ if(validate(cur)) show(cur+1); }));
+form.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click',()=>show(cur-1)));
+
+form.addEventListener('submit', async e=>{
+  e.preventDefault();
+  if(!validate(3)) return;
+  const btn=document.getElementById('submitBtn'); const old=btn.textContent; btn.disabled=true; btn.textContent=t('sending');
+  const data={
+    services:[...form.querySelectorAll('input[name="service"]:checked')].map(i=>i.value),
+    industry:(form.querySelector('input[name="industry"]:checked')||{}).value||'',
+    business:form.business.value.trim(), budget:form.budget.value, details:form.details.value.trim(),
+    name:form.name.value.trim(), phone:form.phone.value.trim(), email:form.email.value.trim(), contactVia:form.contactVia.value,
+    lang, createdAt:new Date().toISOString(), status:'new'
+  };
+  try{
+    const ref=await submitRequest(data);
+    document.getElementById('refCode').textContent=ref;
+    show(4);
+  }catch(err){
+    console.error(err);
+    document.getElementById('err3').textContent=t('err_send');
+  }finally{ btn.disabled=false; btn.textContent=old; }
+});
+document.getElementById('resetBtn').addEventListener('click',()=>{ form.reset(); document.querySelectorAll('.err').forEach(e=>e.textContent=''); show(1); });
+
+/* ---------- Backend ----------
+   Today: requests are saved in the visitor's browser (localStorage) so the
+   form works on GitHub Pages with no backend.
+   Later: replace the body of submitRequest() with Firebase. Example:
+
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+   import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+   const app = initializeApp(firebaseConfig);
+   const db = getFirestore(app);
+   async function submitRequest(data){
+     const ref = await addDoc(collection(db, "requests"), data);
+     return "NV-" + ref.id.slice(0,6).toUpperCase();
+   }
+*/
+async function submitRequest(data){
+  const ref='NV-'+Date.now().toString(36).toUpperCase().slice(-6);
+  const all=JSON.parse(localStorage.getItem('nv_requests')||'[]');
+  all.push({ref,...data});
+  localStorage.setItem('nv_requests',JSON.stringify(all));
+  return ref;
+}
+</script>
+</body>
+</html>
