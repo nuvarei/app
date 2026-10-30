@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NUVAREI — WhatsApp vs website</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1E2A56;--ink:#141A3A;--violet:#5B4FC9;--lav:#9B8CF2;--mist:#E6E2FA;--paper:#F4F4F8;--text:#2A2F4A;--muted:#6B7090;--ok:#2E8B6E;--skin:#E8B898;--hair:#2B1E1E;--top:#7D6FE0;
+  color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1226}}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg,#DAD8E6)}
+body{display:grid;place-items:center;font-family:"Manrope",sans-serif;overflow:hidden;padding-top:env(safe-area-inset-top,0px)}
+#frame{position:relative;width:1080px;height:1920px;background:var(--paper);overflow:hidden;transform-origin:center;box-shadow:0 40px 80px -30px rgba(20,26,58,.5)}
+/* Top: character */
+#char{position:absolute;top:120px;left:0;right:0;height:620px;display:grid;place-items:center}
+#char svg{width:560px;height:560px}
+.brow{transition:transform .35s}
+.mouth{transition:d .3s}
+#face.annoyed .browL{transform:rotate(14deg)}#face.annoyed .browR{transform:rotate(-14deg)}
+#face.happy .browL{transform:translateY(-10px)}#face.happy .browR{transform:translateY(-10px)}
+.eye{transition:transform .25s}
+#face.happy .eyeOpen{opacity:0}#face.happy .eyeClosed{opacity:1}
+.eyeClosed{opacity:0;transition:opacity .2s}
+.eyeOpen{transition:opacity .2s}
+#thought{position:absolute;top:90px;right:140px;background:#fff;border-radius:40px;padding:22px 34px;font-weight:700;font-size:40px;color:var(--navy);box-shadow:0 20px 40px -20px rgba(20,26,58,.4);opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s;max-width:520px;line-height:1.3}
+#thought.on{opacity:1;transform:scale(1)}
+#thought::after{content:"";position:absolute;left:-18px;bottom:30px;width:34px;height:34px;background:#fff;border-radius:50%}
+/* Phone */
+#phone{position:absolute;left:50%;top:760px;transform:translateX(-50%);width:620px;height:1000px;background:#111;border-radius:70px;padding:18px;box-shadow:0 60px 100px -40px rgba(20,26,58,.6)}
+#screen{position:relative;width:100%;height:100%;background:#fff;border-radius:54px;overflow:hidden;font-size:26px;color:#222}
+.notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:170px;height:38px;background:#111;border-radius:20px;z-index:5}
+.view{position:absolute;inset:0;background:#fff;opacity:0;transition:opacity .35s;padding-top:70px}
+.view.on{opacity:1}
+.igbar{display:flex;align-items:center;justify-content:space-between;padding:10px 30px 16px;font-family:"Syne",sans-serif;font-weight:800;font-size:40px;border-bottom:1px solid #eee}
+.igbar small{font-family:"Manrope";font-weight:700;font-size:24px}
+.feed{overflow:hidden;height:800px}
+.feedinner{transition:transform 2.6s cubic-bezier(.3,.6,.2,1)}
+.post{padding:16px 24px}
+.post .u{display:flex;align-items:center;gap:14px;font-weight:700;margin-bottom:12px}
+.av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--lav),var(--violet))}
+.img{height:420px;border-radius:16px;display:grid;place-items:center}
+.dress{width:170px;height:260px;border-radius:40px 40px 12px 12px;position:relative}
+.dress::before{content:"";position:absolute;left:50%;top:-28px;transform:translateX(-50%);width:70px;height:36px;border:14px solid inherit;border-color:inherit;border-radius:40px 40px 0 0;border-bottom:0}
+.acts{display:flex;gap:18px;margin-top:12px;font-size:30px}
+.profile{padding:0 30px}
+.ph{display:flex;align-items:center;gap:26px;margin-top:10px}
+.ph .av{width:120px;height:120px}
+.ph b{font-size:30px;display:block}
+.ph span{color:#666;font-size:22px}
+.bio{margin:22px 0;line-height:1.5;font-size:27px}
+.bio a{color:#1a5fb4;font-weight:700;text-decoration:none}
+.pbtn{display:block;text-align:center;background:#efefef;border-radius:12px;padding:16px;font-weight:700;margin-bottom:22px}
+.pbtn.hl{background:var(--violet);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.grid div{aspect-ratio:1;background:#eee;border-radius:6px;display:grid;place-items:center}
+.grid .dress{width:52px;height:80px;border-radius:14px 14px 6px 6px}
+.grid .dress::before{display:none}
+/* WhatsApp */
+.wa{background:#ECE5DD}
+.wabar{background:#075E54;color:#fff;padding:18px 30px;font-weight:700;font-size:28px;display:flex;gap:16px;align-items:center}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:40px 40px 0 0;padding:34px 36px;transform:translateY(110%);transition:transform .4s cubic-bezier(.2,.8,.2,1);box-shadow:0 -20px 50px rgba(0,0,0,.15)}
+.sheet.on{transform:none}
+.sheet h4{font-size:30px;margin-bottom:22px}
+.fld{border:2px solid #ddd;border-radius:14px;padding:16px 18px;margin-bottom:14px;color:#777;font-size:24px}
+.fld b{color:#222}
+.sbtn{display:flex;gap:14px;margin-top:20px}
+.sbtn div{flex:1;text-align:center;padding:16px;border-radius:14px;font-weight:700;background:#eee}
+.sbtn .go{background:#25D366;color:#fff}
+.chat{padding:30px 24px;display:flex;flex-direction:column;gap:14px}
+.bub{max-width:80%;padding:14px 20px;border-radius:18px;font-size:25px;line-height:1.35;opacity:0;transform:translateY(10px);transition:all .3s}
+.bub.on{opacity:1;transform:none}
+.me{align-self:flex-end;background:#DCF8C6;border-bottom-right-radius:4px}
+.me small{display:block;text-align:right;color:#7a9;font-size:18px;margin-top:4px}
+.sys{align-self:center;background:#fff;color:#777;font-size:21px;padding:8px 16px;border-radius:10px}
+/* Store */
+.store{padding:0}
+.stbar{display:flex;align-items:center;justify-content:space-between;padding:12px 30px 16px;border-bottom:1px solid #eee}
+.stbar b{font-family:"Syne";font-size:32px;color:var(--navy)}
+.prod{padding:24px 30px}
+.prod .img{height:380px;background:var(--mist);border-radius:22px}
+.prod h5{font-size:30px;margin-top:20px}
+.prod .pr{color:var(--violet);font-weight:800;font-size:30px;margin:6px 0 18px}
+.sizes{display:flex;gap:12px;margin-bottom:22px}
+.sizes div{width:72px;height:72px;border:2px solid #ddd;border-radius:14px;display:grid;place-items:center;font-weight:700;transition:all .2s}
+.sizes div.sel{background:var(--navy);color:#fff;border-color:var(--navy)}
+.cta{background:var(--violet);color:#fff;text-align:center;padding:22px;border-radius:16px;font-weight:800;font-size:28px;transition:background .3s,transform .15s}
+.cta.knet{background:#0A5C8F}
+.cta.done{background:var(--ok)}
+.cta.press{transform:scale(.96)}
+/* Tap indicator */
+#tap{position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(91,79,201,.35);border:3px solid var(--violet);transform:translate(-50%,-50%) scale(0);pointer-events:none;z-index:9}
+#tap.go{animation:tap .5s ease}
+@keyframes tap{0%{transform:translate(-50%,-50%) scale(0);opacity:1}60%{transform:translate(-50%,-50%) scale(1);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.4);opacity:0}}
+/* Caption */
+#cap{position:absolute;left:60px;right:60px;top:1790px;text-align:center;font-family:"Syne",sans-serif;font-weight:800;font-size:46px;color:var(--navy);opacity:0;transform:translateY(12px);transition:opacity .35s,transform .35s;line-height:1.2}
+#cap.on{opacity:1;transform:none}
+/* End card */
+#end{position:absolute;inset:0;background:var(--paper);display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .6s;z-index:20}
+#end.on{opacity:1;pointer-events:auto}
+#end img{width:620px}
+#end p{font-family:"Syne";font-weight:700;font-size:40px;color:var(--navy);margin-top:30px}
+#end small{display:block;color:var(--muted);font-size:30px;margin-top:18px;font-weight:600}
+#replay{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0px));right:24px;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:12px 22px;font-family:"Manrope";font-weight:700;font-size:15px;cursor:pointer;z-index:30}
+.stamp{position:absolute;top:40px;left:50px;font-family:"Syne";font-weight:800;font-size:28px;color:var(--lav);letter-spacing:.02em}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="frame">
+  <div class="stamp" id="stamp">Scene 1</div>
+
+  <div id="char">
+    <svg viewBox="0 0 400 400" id="face">
+      <!-- shoulders / top -->
+      <path d="M60 400 C60 300 140 270 200 270 C260 270 340 300 340 400 Z" fill="var(--top)"/>
+      <!-- neck -->
+      <rect x="170" y="225" width="60" height="60" rx="20" fill="var(--skin)"/>
+      <!-- hair back -->
+      <path d="M90 180 C80 70 320 70 310 180 L320 290 C300 320 100 320 80 290 Z" fill="var(--hair)"/>
+      <!-- head -->
+      <ellipse cx="200" cy="165" rx="92" ry="105" fill="var(--skin)"/>
+      <!-- hair front -->
+      <path d="M108 150 C110 70 290 60 292 150 C260 110 210 95 170 125 C150 140 130 150 108 150 Z" fill="var(--hair)"/>
+      <!-- ears -->
+      <circle cx="108" cy="170" r="14" fill="var(--skin)"/><circle cx="292" cy="170" r="14" fill="var(--skin)"/>
+      <!-- brows -->
+      <g class="brow browL" style="transform-origin:160px 135px"><path d="M138 138 Q160 126 182 136" stroke="var(--hair)" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+      <g class="brow browR" style="transform-origin:240px 135px"><path d="M218 136 Q240 126 262 138" stroke="var(--hair)" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+      <!-- eyes -->
+      <g class="eye eyeOpen"><ellipse cx="160" cy="168" rx="11" ry="13" fill="#2B1E1E"/><ellipse cx="240" cy="168" rx="11" ry="13" fill="#2B1E1E"/><circle cx="164" cy="163" r="4" fill="#fff"/><circle cx="244" cy="163" r="4" fill="#fff"/></g>
+      <g class="eyeClosed"><path d="M146 170 Q160 158 174 170" stroke="#2B1E1E" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M226 170 Q240 158 254 170" stroke="#2B1E1E" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+      <!-- blush -->
+      <ellipse cx="140" cy="200" rx="16" ry="9" fill="#F0A090" opacity=".5"/><ellipse cx="260" cy="200" rx="16" ry="9" fill="#F0A090" opacity=".5"/>
+      <!-- nose -->
+      <path d="M196 185 Q200 200 206 198" stroke="#D49A7A" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- mouth -->
+      <path id="mouth" d="M180 225 Q200 232 220 225" stroke="#B5523F" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div id="thought"></div>
+  </div>
+
+  <div id="phone"><div id="screen">
+    <div class="notch"></div>
+    <div id="tap"></div>
+
+    <!-- Instagram feed -->
+    <div class="view on" id="vFeed">
+      <div class="igbar">Instagram <small>♡ ✉</small></div>
+      <div class="feed"><div class="feedinner" id="feedinner">
+        <div class="post"><div class="u"><div class="av"></div>cafe.kw</div><div class="img" style="background:#F2E8DC"><span style="font-size:110px">☕</span></div><div class="acts">♡ ○ ➤</div></div>
+        <div class="post"><div class="u"><div class="av"></div>noor.boutique</div><div class="img" style="background:#FBEAF0"><div class="dress" style="background:#C9407A;border-color:#C9407A"></div></div><div class="acts">♡ ○ ➤</div></div>
+        <div class="post"><div class="u"><div class="av"></div>gym.life</div><div class="img" style="background:#E4EEF2"><span style="font-size:110px">🏋️</span></div><div class="acts">♡ ○ ➤</div></div>
+        <div class="post"><div class="u"><div class="av"></div>lina.wear</div><div class="img" style="background:var(--mist)"><div class="dress" style="background:#5B4FC9;border-color:#5B4FC9"></div></div><div class="acts">♡ ○ ➤</div></div>
+      </div></div>
+    </div>
+
+    <!-- Profile A -->
+    <div class="view profile" id="vProfA">
+      <div class="ph"><div class="av"></div><div><b>noor.boutique</b><span>Women's fashion · Kuwait</span></div></div>
+      <div class="bio">Dresses &amp; abayas 👗<br><b>للطلب تواصلوا واتساب 📲</b><br>+965 5XXX XXXX</div>
+      <div class="pbtn" id="msgBtn">Message on WhatsApp</div>
+      <div class="grid"><div><div class="dress" style="background:#C9407A"></div></div><div><div class="dress" style="background:#E08A3C"></div></div><div><div class="dress" style="background:#3E7F6E"></div></div><div><div class="dress" style="background:#2C3E7A"></div></div><div><div class="dress" style="background:#B04A4A"></div></div><div><div class="dress" style="background:#777"></div></div></div>
+    </div>
+
+    <!-- WhatsApp -->
+    <div class="view wa" id="vWa">
+      <div class="wabar"><span>←</span><span>+965 5XXX XXXX</span></div>
+      <div class="chat">
+        <div class="bub me" id="b1">Hi, is the pink dress available in M?<small>12:04 ✓✓</small></div>
+        <div class="bub sys" id="b2">Waiting for reply…</div>
+        <div class="bub me" id="b3">Hello?<small>12:31 ✓✓</small></div>
+        <div class="bub sys" id="b4">Last seen today at 11:52</div>
+      </div>
+      <div class="sheet" id="sheet">
+        <h4>Save contact</h4>
+        <div class="fld">Name: <b>noor boutique</b></div>
+        <div class="fld">Phone: <b>+965 5XXX XXXX</b></div>
+        <div class="sbtn"><div>Cancel</div><div class="go">Save</div></div>
+      </div>
+    </div>
+
+    <!-- Profile B -->
+    <div class="view profile" id="vProfB">
+      <div class="ph"><div class="av" style="background:linear-gradient(135deg,#5B4FC9,#1E2A56)"></div><div><b>lina.wear</b><span>Women's fashion · Kuwait</span></div></div>
+      <div class="bio">New collection out now ✨<br>Order online 👇<br><a href="#" id="linkBtn">lina-wear.com</a></div>
+      <div class="pbtn hl">Shop now</div>
+      <div class="grid"><div><div class="dress" style="background:#5B4FC9"></div></div><div><div class="dress" style="background:#9B8CF2"></div></div><div><div class="dress" style="background:#1E2A56"></div></div><div><div class="dress" style="background:#E6A5C8"></div></div><div><div class="dress" style="background:#3E7F6E"></div></div><div><div class="dress" style="background:#E08A3C"></div></div></div>
+    </div>
+
+    <!-- Store -->
+    <div class="view store" id="vStore">
+      <div class="stbar"><b>lina.wear</b><span>🛍 <span id="cartN">0</span></span></div>
+      <div class="prod">
+        <div class="img"><div class="dress" style="background:#5B4FC9;border-color:#5B4FC9"></div></div>
+        <h5>Lavender wrap dress</h5>
+        <div class="pr">18.000 KD</div>
+        <div class="sizes" id="sizes"><div>S</div><div>M</div><div>L</div><div>XL</div></div>
+        <div class="cta" id="cta">Add to cart</div>
+      </div>
+    </div>
+  </div></div>
+
+  <div id="cap"></div>
+
+  <div id="end"><div style="text-align:center"><img src="logo.png" alt="NUVAREI"><p>Your store. Your website. One link.</p><small>nuvarei.com</small></div></div>
+</div>
+<button id="replay">▶ Replay</button>
+
+<script>
+const $=s=>document.querySelector(s);
+const face=$('#face'), mouth=$('#mouth'), thought=$('#thought'), cap=$('#cap'), tap=$('#tap');
+const MOUTH={neutral:"M180 225 Q200 232 220 225",flat:"M182 228 Q200 226 218 228",frown:"M180 232 Q200 220 220 232",smile:"M176 220 Q200 248 224 220",grin:"M172 216 Q200 256 228 216"};
+function mood(m,mouthKey){face.className=m;mouth.setAttribute('d',MOUTH[mouthKey]);}
+function say(t){thought.innerHTML=t;thought.classList.toggle('on',!!t);}
+function caption(t){cap.innerHTML=t;cap.classList.toggle('on',!!t);}
+function view(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));}
+function tapAt(x,y){tap.style.left=x+'px';tap.style.top=y+'px';tap.classList.remove('go');void tap.offsetWidth;tap.classList.add('go');}
+function fit(){const s=Math.min(innerWidth/1080,(innerHeight-20)/1920);$('#frame').style.transform=`scale(${s})`;}
+addEventListener('resize',fit);fit();
+
+let timers=[];
+function at(ms,fn){timers.push(setTimeout(fn,ms));}
+function reset(){
+  timers.forEach(clearTimeout);timers=[];
+  mood('','neutral');say('');caption('');view('vFeed');$('#end').classList.remove('on');
+  $('#feedinner').style.transform='';$('#sheet').classList.remove('on');
+  document.querySelectorAll('.bub').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#sizes div').forEach(d=>d.classList.remove('sel'));
+  const c=$('#cta');c.className='cta';c.textContent='Add to cart';$('#cartN').textContent='0';
+  $('#stamp').textContent='Scene 1';
+}
+function play(){
+  reset();
+  /* ---- Scene 1 ---- */
+  at(300,()=>caption('Scrolling for a new dress…'));
+  at(800,()=>$('#feedinner').style.transform='translateY(-560px)');
+  at(3400,()=>{tapAt(140,300);});
+  at(3700,()=>{view('vProfA');caption('Found one 👀');});
+  at(5200,()=>{caption('“To order, contact us on WhatsApp”');mood('','flat');});
+  at(6600,()=>{tapAt(310,400);});
+  at(6900,()=>{view('vWa');$('#sheet').classList.add('on');});
+  at(7400,()=>{mood('annoyed','frown');say('Save a number… just for one dress? 😩');caption('Save contact. Open WhatsApp. Type. Wait.');});
+  at(9400,()=>{$('#sheet').classList.remove('on');$('#b1').classList.add('on');});
+  at(10400,()=>$('#b2').classList.add('on'));
+  at(11600,()=>$('#b3').classList.add('on'));
+  at(12600,()=>{$('#b4').classList.add('on');say('Still waiting… 🙄');caption('…and wait some more.');});
+  at(14300,()=>{say('');mood('','flat');caption('');});
+
+  /* ---- Scene 2 ---- */
+  at(15000,()=>{$('#stamp').textContent='Scene 2';view('vFeed');$('#feedinner').style.transform='translateY(-560px)';caption('Back to scrolling…');});
+  at(15300,()=>$('#feedinner').style.transform='translateY(-1700px)');
+  at(17800,()=>tapAt(140,300));
+  at(18100,()=>{view('vProfB');caption('Another brand… with a link in bio 🔗');mood('','neutral');});
+  at(19600,()=>{tapAt(170,330);});
+  at(19900,()=>{view('vStore');caption('The store opens. No contact. No waiting.');mood('happy','smile');say('Oh, this is easy ✨');});
+  at(21200,()=>{tapAt(185,710);document.querySelectorAll('#sizes div')[1].classList.add('sel');});
+  at(22000,()=>{tapAt(310,820);const c=$('#cta');c.classList.add('press');setTimeout(()=>c.classList.remove('press'),150);c.textContent='Pay with KNET';c.classList.add('knet');$('#cartN').textContent='1';});
+  at(23200,()=>{tapAt(310,820);const c=$('#cta');c.textContent='Order confirmed ✓';c.className='cta done';mood('happy','grin');say('Done in 10 seconds 🥰');caption('Pick a size. Pay. Done.');});
+  at(25800,()=>{say('');caption('');});
+  at(26400,()=>$('#end').classList.add('on'));
+}
+$('#replay').addEventListener('click',play);
+play();
+</script>
+</body>
+</html>
