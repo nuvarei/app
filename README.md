@@ -6,6 +6,7 @@ Static marketing website for NUVAREI, hosted on GitHub Pages at <https://nuvarei
 
 - `index.html` — main landing page
 - `ad-whatsapp-vs-website.html` — "WhatsApp vs website" ad page
+- `demo-store.html` — NOOR Wear, a fictional clothing store demo (catalog, cart, checkout); everything stays in the visitor's browser
 - `logo.png` — brand logo
 - `firebase.js` — Firebase setup (Auth, Firestore, Storage), loaded from Google's CDN; not used by any page yet
 - `.nojekyll` — tells GitHub Pages to serve files as-is

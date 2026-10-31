@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOOR Wear — Demo store by NUVAREI</title>
+<meta name="description" content="A working demo of a clothing online store built by NUVAREI: catalog, sizes and colours, cart, delivery zones, discount codes and checkout.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="logo.png" type="image/png">
+<script>
+  (function(){ var t; try{ t=localStorage.getItem('nv_theme'); }catch(e){}
+    if(!t) t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+    document.documentElement.dataset.theme=t; })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7F2; --surface:#FFFFFF; --soft:#F1ECE4; --ink:#1C1A17; --text:#3A3631; --muted:#736C63;
+    --line:rgba(28,26,23,.1); --accent:#1C1A17; --accent-ink:#FFFFFF; --sale:#B4472E; --ok:#2E7D5B; --nv:#5B4FC9;
+    --display:"Fraunces",serif; --body:"Manrope",sans-serif; --radius:14px; --max:1180px;
+  }
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#13110F; --surface:#1C1A17; --soft:#26231F; --ink:#F4EFE8; --text:#D9D3CA; --muted:#A39B90;
+    --line:rgba(255,255,255,.1); --accent:#F4EFE8; --accent-ink:#13110F; --sale:#E58B73; --ok:#6CC59A; --nv:#7B6FE0;
+  }
+  html[dir="rtl"]{ --display:"IBM Plex Sans Arabic",sans-serif; --body:"IBM Plex Sans Arabic",sans-serif; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);background:var(--bg);color:var(--text);line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--display);color:var(--ink);line-height:1.1;font-weight:700}
+  button,input,select,textarea{font:inherit;color:inherit}
+  button{cursor:pointer}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--nv);outline-offset:2px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  /* Demo ribbon */
+  .ribbon{background:var(--nv);color:#fff;font-size:.85rem;font-weight:600}
+  .ribbon .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:38px;flex-wrap:wrap;padding-block:6px}
+  .ribbon a{text-decoration:none;opacity:.95;white-space:nowrap}
+  .ribbon a:hover{text-decoration:underline}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:18px;height:68px}
+  .logo{font-family:"Fraunces",serif;font-weight:700;font-size:1.6rem;letter-spacing:.14em;color:var(--ink);text-decoration:none}
+  .logo small{font-family:var(--body);font-size:.62rem;letter-spacing:.3em;display:block;margin-top:-4px;color:var(--muted);font-weight:600}
+  .cats{display:flex;gap:6px;margin-inline-start:auto;overflow-x:auto;scrollbar-width:none}
+  .cats button{background:none;border:0;padding:8px 12px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
+  .cats button:hover{color:var(--ink)}
+  .cats button[aria-pressed="true"]{background:var(--soft);color:var(--ink)}
+  .tools{display:flex;gap:8px;align-items:center}
+  .icon-btn{background:transparent;border:1.5px solid var(--line);border-radius:999px;height:38px;min-width:38px;display:inline-grid;place-items:center;padding:0 10px;font-weight:700;font-size:.85rem;color:var(--ink);position:relative}
+  .icon-btn:hover{border-color:var(--ink)}
+  .icon-btn svg{width:18px;height:18px}
+  .theme .sun,html[data-theme="dark"] .theme .moon{display:none}
+  html[data-theme="dark"] .theme .sun{display:block}
+  .count{position:absolute;top:-6px;inset-inline-end:-6px;background:var(--sale);color:#fff;border-radius:999px;font-size:.7rem;min-width:19px;height:19px;display:grid;place-items:center;padding:0 5px}
+  .count[hidden]{display:none}
+  @media(max-width:820px){
+    .bar{flex-wrap:wrap;height:auto;padding-block:10px;gap:10px}
+    .tools{margin-inline-start:auto}
+    .cats{order:3;width:100%;margin:0}
+  }
+
+  /* Hero */
+  .hero{padding:clamp(28px,5vw,56px) 0 8px}
+  .hero-box{background:var(--soft);border-radius:22px;padding:clamp(26px,5vw,56px);display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;overflow:hidden}
+  .hero .kicker{font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+  html[dir="rtl"] .hero .kicker{letter-spacing:0}
+  .hero h1{font-size:clamp(2.2rem,5.4vw,4rem);margin:10px 0 14px;font-weight:500}
+  .hero p{color:var(--muted);max-width:42ch;margin-bottom:22px}
+  .hero-art{display:flex;justify-content:center;gap:4%}
+  .hero-art svg{width:44%;max-width:170px;height:auto}
+  .hero-art svg:last-child{margin-top:12%}
+  @media(max-width:700px){.hero-box{grid-template-columns:1fr}.hero-art{display:none}}
+  .perks{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:18px;font-size:.88rem;font-weight:600;color:var(--muted)}
+  .perks span::before{content:"✓ ";color:var(--ok)}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--accent);color:var(--accent-ink);border:2px solid var(--accent);border-radius:999px;padding:13px 24px;font-weight:700;text-decoration:none;transition:opacity .15s,transform .1s}
+  .btn:hover{opacity:.88}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn.ghost:hover{border-color:var(--ink);opacity:1}
+  .btn.block{width:100%}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* Catalog */
+  .catalog{padding:30px 0 70px}
+  .cat-head{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .cat-head h2{font-size:1.7rem;font-weight:500}
+  .cat-head .n{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .sort{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--muted);font-weight:600}
+  .sort select{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:600;color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 18px}
+  @media(max-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr);gap:18px 12px}}
+  .card{background:none;border:0;text-align:start;display:flex;flex-direction:column;gap:10px}
+  .art{position:relative;aspect-ratio:4/5;border-radius:var(--radius);background:color-mix(in srgb,var(--c) 16%,var(--soft));display:grid;place-items:center;overflow:hidden;transition:transform .25s}
+  .art svg{width:70%;height:auto;transition:transform .35s}
+  .card:hover .art svg{transform:scale(1.05) rotate(-1.5deg)}
+  .badge{position:absolute;top:10px;inset-inline-start:10px;background:var(--surface);color:var(--ink);font-size:.72rem;font-weight:700;padding:4px 9px;border-radius:999px}
+  .badge.sale{background:var(--sale);color:#fff}
+  .card h3{font-family:var(--body);font-size:.98rem;font-weight:700;color:var(--ink)}
+  .price{font-weight:700;color:var(--ink)}
+  .price s{color:var(--muted);font-weight:500;margin-inline-start:6px;font-size:.9em}
+  .price.on-sale{color:var(--sale)}
+  .dots{display:flex;gap:5px}
+  .dots i{width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 1px rgba(128,128,128,.4);display:block}
+
+  /* Dialogs */
+  dialog{border:0;color:var(--text);background:var(--surface);padding:0}
+  dialog::backdrop{background:rgba(10,8,6,.5)}
+  .product{width:min(920px,calc(100% - 24px));max-height:calc(100% - 24px);border-radius:20px;margin:auto}
+  .product-in{display:grid;grid-template-columns:1fr 1fr}
+  .product .art{aspect-ratio:auto;min-height:100%;border-radius:0}
+  .product .info{padding:clamp(22px,4vw,38px);display:flex;flex-direction:column;gap:16px}
+  .product h2{font-size:1.8rem;font-weight:500}
+  .product .desc{color:var(--muted)}
+  .opt-label{font-weight:700;font-size:.85rem;color:var(--ink);margin-bottom:8px;display:flex;gap:6px}
+  .opt-label span{color:var(--muted);font-weight:600}
+  .swatches,.sizes{display:flex;flex-wrap:wrap;gap:8px}
+  .swatches button{width:34px;height:34px;border-radius:50%;background:var(--c);border:3px solid var(--surface);box-shadow:0 0 0 1.5px var(--line)}
+  .swatches button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+  .sizes button{min-width:48px;height:42px;padding:0 12px;border-radius:10px;background:var(--surface);border:1.5px solid var(--line);font-weight:700}
+  .sizes button:hover{border-color:var(--ink)}
+  .sizes button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+  .buy{display:flex;gap:10px;margin-top:auto;padding-top:6px}
+  .buy .btn{flex:1}
+  .stepper{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;overflow:hidden}
+  .stepper button{background:none;border:0;width:38px;height:42px;font-size:1.15rem;font-weight:700;color:var(--ink)}
+  .stepper button:hover{background:var(--soft)}
+  .stepper output{min-width:24px;text-align:center;font-weight:700}
+  .stepper.sm button{width:30px;height:32px}
+  .msg{font-size:.88rem;font-weight:600;color:var(--sale);min-height:1.3em}
+  .close{position:absolute;top:12px;inset-inline-end:12px;z-index:2;background:var(--surface);border:0;width:38px;height:38px;border-radius:50%;font-size:1.3rem;line-height:1;color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  @media(max-width:700px){.product-in{grid-template-columns:1fr}.product .art{min-height:260px}.product .art svg{width:46%}}
+
+  .drawer{margin:0;margin-inline-start:auto;height:100%;max-height:100%;width:min(420px,100%);display:none;flex-direction:column}
+  .drawer[open]{display:flex;animation:slide .22s ease}
+  @keyframes slide{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+  html[dir="rtl"] .drawer[open]{animation-name:slide-rtl}
+  @keyframes slide-rtl{from{transform:translateX(-30px);opacity:0}to{transform:none;opacity:1}}
+  .drawer-head{display:flex;justify-content:space-between;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line)}
+  .drawer-head h2{font-size:1.35rem;font-weight:500}
+  .drawer-head .close{position:static;box-shadow:none;background:var(--soft)}
+  .lines{flex:1;overflow-y:auto;padding:8px 22px}
+  .line{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:14px 0;border-bottom:1px solid var(--line);align-items:center}
+  .line .art{width:72px;aspect-ratio:4/5;border-radius:10px}
+  .line .art svg{width:76%}
+  .line h3{font-family:var(--body);font-size:.92rem;font-weight:700}
+  .line .meta{font-size:.82rem;color:var(--muted);margin:2px 0 8px}
+  .line .end{text-align:end;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .remove{background:none;border:0;color:var(--muted);font-size:.8rem;text-decoration:underline}
+  .remove:hover{color:var(--sale)}
+  .empty{text-align:center;padding:60px 10px;color:var(--muted)}
+  .empty svg{width:56px;height:56px;margin-bottom:12px;opacity:.6}
+  .drawer-foot{padding:18px 22px 22px;border-top:1px solid var(--line);display:grid;gap:12px}
+  .ship-meter{font-size:.85rem;color:var(--muted)}
+  .ship-meter b{color:var(--ink)}
+  .meter{height:6px;border-radius:3px;background:var(--soft);margin-top:6px;overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--ok);border-radius:3px;transition:width .3s}
+  .row{display:flex;justify-content:space-between;gap:12px}
+  .row.total{font-weight:700;color:var(--ink);font-size:1.1rem}
+
+  /* Checkout */
+  .checkout{padding:30px 0 70px}
+  .back{background:none;border:0;font-weight:700;color:var(--muted);margin-bottom:14px}
+  .back:hover{color:var(--ink)}
+  .co-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:start}
+  .co-grid > *,.fields > *{min-width:0}
+  @media(max-width:900px){.co-grid{grid-template-columns:1fr}}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,30px)}
+  .panel + .panel{margin-top:18px}
+  .panel h2{font-size:1.25rem;font-weight:500;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  .panel h2 b{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--surface);display:grid;place-items:center;font-family:var(--body);font-size:.85rem}
+  .fields{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+  .f{grid-column:span 6;display:flex;flex-direction:column;gap:6px}
+  .f.half{grid-column:span 3}
+  .f.third{grid-column:span 2}
+  @media(max-width:560px){.f.half,.f.third{grid-column:span 6}}
+  .f label{font-weight:700;font-size:.85rem;color:var(--ink)}
+  .f label em{font-style:normal;color:var(--muted);font-weight:500}
+  .f input,.f select,.f textarea{background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:12px 13px;width:100%}
+  .f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--ink)}
+  .f [aria-invalid="true"]{border-color:var(--sale)}
+  .f .err{font-size:.8rem;color:var(--sale);font-weight:600}
+  .phone{display:flex;direction:ltr}
+  .phone span{display:grid;place-items:center;padding:0 12px;background:var(--soft);border:1.5px solid var(--line);border-inline-end:0;border-start-start-radius:10px;border-end-start-radius:10px;font-weight:700;font-size:.9rem}
+  .phone input{border-start-start-radius:0;border-end-start-radius:0}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;gap:12px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer}
+  .opt:has(input:checked){border-color:var(--ink);background:var(--soft)}
+  .opt input{accent-color:var(--ink);width:18px;height:18px}
+  .opt strong{display:block;color:var(--ink);font-size:.95rem}
+  .opt small{color:var(--muted)}
+  .opt .tag{margin-inline-start:auto;font-weight:700;font-size:.85rem;color:var(--ink);white-space:nowrap}
+  .note{display:flex;gap:10px;font-size:.85rem;color:var(--muted);background:var(--soft);border-radius:12px;padding:12px 14px;margin-top:14px}
+  .summary{position:sticky;top:92px}
+  .sum-lines{display:grid;gap:12px;margin-bottom:16px}
+  .sum-line{display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;font-size:.9rem}
+  .sum-line .art{width:52px;aspect-ratio:4/5;border-radius:8px}
+  .sum-line .meta{color:var(--muted);font-size:.8rem}
+  .promo{display:flex;gap:8px;margin:4px 0 6px}
+  .promo input{flex:1;background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;text-transform:uppercase;min-width:0}
+  .promo .btn{padding:10px 16px}
+  .promo-msg{font-size:.82rem;font-weight:600;min-height:1.2em;margin-bottom:10px}
+  .promo-msg.ok{color:var(--ok)}
+  .promo-msg.bad{color:var(--sale)}
+  .totals{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:14px;font-size:.95rem}
+  .totals .disc{color:var(--ok)}
+  .hint{font-size:.8rem;color:var(--muted);margin-top:12px}
+  .hint code{font-weight:700;color:var(--ink)}
+
+  /* Confirmation */
+  .done{padding:50px 0 80px}
+  .done .panel{max-width:620px;margin:0 auto;text-align:center}
+  .tick{width:72px;height:72px;border-radius:50%;background:var(--ok);display:grid;place-items:center;margin:6px auto 18px}
+  .done h1{font-size:2rem;font-weight:500;margin-bottom:8px}
+  .done .ref{display:inline-block;font-weight:700;color:var(--ink);background:var(--soft);padding:8px 16px;border-radius:999px;margin:14px 0 22px;direction:ltr}
+  .done dl{text-align:start;display:grid;grid-template-columns:auto 1fr;gap:8px 18px;border-top:1px solid var(--line);padding-top:18px;font-size:.92rem}
+  .done dt{color:var(--muted);font-weight:600}
+  .done dd{color:var(--ink);font-weight:600}
+  .done .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+
+  footer{border-top:1px solid var(--line);padding:26px 0;font-size:.85rem;color:var(--muted)}
+  footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--ink);color:var(--surface);padding:12px 20px;border-radius:999px;font-weight:700;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  [hidden]{display:none!important}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="ribbon">
+  <div class="wrap">
+    <span data-t="ribbon">Demo store built by NUVAREI — no real orders or payments.</span>
+    <a href="./" data-t="ribbon_back">← Back to NUVAREI</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap bar">
+    <a class="logo" href="#" id="home">NOOR<small>WEAR · KUWAIT</small></a>
+    <nav class="cats" id="cats" aria-label="Categories"></nav>
+    <div class="tools">
+      <button class="icon-btn theme" id="themeBtn" type="button" aria-label="Night mode" aria-pressed="false">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn" id="langBtn" type="button">العربية</button>
+      <button class="icon-btn" id="cartBtn" type="button" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <span class="count" id="cartCount" hidden>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Shop -->
+  <div id="viewShop">
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-box">
+          <div>
+            <div class="kicker" data-t="hero_kicker">New season</div>
+            <h1 data-t="hero_h">The linen edit</h1>
+            <p data-t="hero_p">Light layers, modest cuts and everyday basics made for Gulf summers.</p>
+            <a class="btn" href="#shop" id="heroCta" data-t="hero_cta">Shop the collection</a>
+            <div class="perks"><span data-t="perk1">Free delivery over 20 KD</span><span data-t="perk2">KNET & cards</span><span data-t="perk3">14-day returns</span></div>
+          </div>
+          <div class="hero-art" id="heroArt" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+    <section class="catalog" id="shop">
+      <div class="wrap">
+        <div class="cat-head">
+          <div><h2 id="catTitle">All</h2><div class="n" id="catCount"></div></div>
+          <label class="sort"><span data-t="sort">Sort</span>
+            <select id="sort">
+              <option value="featured" data-t="sort_featured">Featured</option>
+              <option value="low" data-t="sort_low">Price: low to high</option>
+              <option value="high" data-t="sort_high">Price: high to low</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Checkout -->
+  <div id="viewCheckout" hidden>
+    <section class="checkout">
+      <div class="wrap">
+        <button class="back" type="button" id="backToShop" data-t="continue">← Continue shopping</button>
+        <h1 style="font-size:2rem;font-weight:500;margin-bottom:22px" data-t="checkout">Checkout</h1>
+        <form class="co-grid" id="coForm" novalidate>
+          <div>
+            <div class="panel">
+              <h2><b>1</b><span data-t="co_contact">Contact</span></h2>
+              <div class="fields">
+                <div class="f half"><label for="cName" data-t="f_name">Full name</label><input id="cName" name="name" autocomplete="name" required><span class="err"></span></div>
+                <div class="f half"><label for="cPhone" data-t="f_phone">Mobile</label><div class="phone"><span>+965</span><input id="cPhone" name="phone" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="5XXX XXXX" required></div><span class="err"></span></div>
+                <div class="f"><label for="cEmail"><span data-t="f_email">Email</span> <em data-t="optional">(optional)</em></label><input id="cEmail" name="email" type="email" autocomplete="email"><span class="err"></span></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2><b>2</b><span data-t="co_delivery">Delivery address</span></h2>
+              <div class="fields">
+                <div class="f half"><label for="cGov" data-t="f_gov">Governorate</label><select id="cGov" name="gov" required></select><span class="err"></span></div>
+                <div class="f half"><label for="cArea" data-t="f_area">Area</label><input id="cArea" name="area" required><span class="err"></span></div>
+                <div class="f third"><label for="cBlock" data-t="f_block">Block</label><input id="cBlock" name="block" inputmode="numeric" required><span class="err"></span></div>
+                <div class="f third"><label for="cStreet" data-t="f_street">Street</label><input id="cStreet" name="street" required><span class="err"></span></div>
+                <div class="f third"><label for="cHouse" data-t="f_house">House / building</label><input id="cHouse" name="house" required><span class="err"></span></div>
+                <div class="f"><label for="cNotes"><span data-t="f_notes">Delivery notes</span> <em data-t="optional">(optional)</em></label><input id="cNotes" name="notes"></div>
+              </div>
+              <div style="margin-top:16px">
+                <div class="opt-label" data-t="f_slot">Delivery time</div>
+                <div class="opts" id="slots"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h2><b>3</b><span data-t="co_payment">Payment</span></h2>
+              <div class="opts" id="pays"></div>
+              <div class="note"><span aria-hidden="true">ⓘ</span><span data-t="pay_note">This is a demo: you won't be asked for card details and nothing is charged. In a live store, KNET and card payments open the bank's secure payment page.</span></div>
+            </div>
+          </div>
+          <aside class="panel summary" aria-labelledby="sumTitle">
+            <h2 id="sumTitle" data-t="summary">Order summary</h2>
+            <div class="sum-lines" id="sumLines"></div>
+            <div class="promo">
+              <label class="sr" for="promo" data-t="promo">Discount code</label>
+              <input id="promo" placeholder="Discount code" data-t-ph="promo" autocomplete="off">
+              <button class="btn ghost" type="button" id="promoBtn" data-t="apply">Apply</button>
+            </div>
+            <div class="promo-msg" id="promoMsg" role="status"></div>
+            <div class="totals" id="totals"></div>
+            <button class="btn block" type="submit" style="margin-top:18px" id="placeBtn" data-t="place">Place order</button>
+            <div class="msg" id="formMsg" role="alert" style="margin-top:8px;text-align:center"></div>
+            <p class="hint" data-t="promo_hint">Try the codes <code>NUVAREI10</code> or <code>FREESHIP</code>.</p>
+          </aside>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- Confirmation -->
+  <div id="viewDone" hidden>
+    <section class="done">
+      <div class="wrap">
+        <div class="panel" id="donePanel"></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span data-t="foot">NOOR Wear is a fictional brand. This store is a demo built by NUVAREI.</span>
+    <a href="./#apply" data-t="foot_cta">Want a store like this? Talk to NUVAREI →</a>
+  </div>
+</footer>
+
+<dialog class="product" id="productDlg" aria-labelledby="pTitle">
+  <button class="close" type="button" data-close aria-label="Close">×</button>
+  <div class="product-in" id="productBody"></div>
+</dialog>
+
+<dialog class="drawer" id="cartDlg" aria-labelledby="cartTitle">
+  <div class="drawer-head"><h2 id="cartTitle" data-t="cart">Your bag</h2><button class="close" type="button" data-close aria-label="Close">×</button></div>
+  <div class="lines" id="cartLines"></div>
+  <div class="drawer-foot" id="cartFoot"></div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- Data ---------- */
+const FREE_SHIP = 20000; // fils (20 KD)
+const C = {
+  white:{hex:"#F2EEE6",en:"Off-white",ar:"أوف وايت"}, sand:{hex:"#D8C3A0",en:"Sand",ar:"رملي"}, sky:{hex:"#9CC3DE",en:"Sky",ar:"سماوي"},
+  black:{hex:"#24221F",en:"Black",ar:"أسود"}, olive:{hex:"#7A7D4F",en:"Olive",ar:"زيتي"}, grey:{hex:"#A7A6A2",en:"Heather grey",ar:"رمادي"},
+  navy:{hex:"#2C3A5C",en:"Navy",ar:"كحلي"}, clay:{hex:"#C07A5A",en:"Clay",ar:"طيني"}, beige:{hex:"#CDB896",en:"Beige",ar:"بيج"},
+  terracotta:{hex:"#B65A3C",en:"Terracotta",ar:"تيراكوتا"}, sage:{hex:"#9DB09A",en:"Sage",ar:"أخضر مريمي"}, indigo:{hex:"#3D4E7A",en:"Indigo",ar:"نيلي"},
+  wash:{hex:"#8FA7C4",en:"Light wash",ar:"جينز فاتح"}, yellow:{hex:"#E9C85B",en:"Sunshine",ar:"أصفر"}, pink:{hex:"#E7A3A8",en:"Rose",ar:"وردي"},
+  maroon:{hex:"#6B2A33",en:"Maroon",ar:"عنابي"}, khaki:{hex:"#A99868",en:"Khaki",ar:"كاكي"}, lilac:{hex:"#B7A6D8",en:"Lilac",ar:"ليلكي"}
+};
+const ADULT = ["XS","S","M","L","XL"], KIDS = ["2-3Y","4-5Y","6-7Y","8-9Y"], ONE = ["One size"];
+const P = [
+  {id:1, cat:"men", type:"shirt", price:14500, badge:"new", colors:["white","sand","sky"], sizes:["S","M","L","XL"],
+   en:["Linen shirt","Breathable pure linen with a relaxed fit and a soft collar."], ar:["قميص كتان","كتان خالص يسمح بمرور الهواء بقصّة مريحة وياقة ناعمة."]},
+  {id:2, cat:"women", type:"abaya", price:24000, colors:["black","navy"], sizes:ADULT,
+   en:["Classic open abaya","Flowing crepe with wide sleeves and a hidden snap front."], ar:["عباية كلاسيكية مفتوحة","كريب انسيابي بأكمام واسعة وكبسات مخفية."]},
+  {id:3, cat:"men", type:"tee", price:6900, colors:["black","white","olive"], sizes:ADULT,
+   en:["Oversized tee","Heavyweight cotton with a boxy, dropped-shoulder fit."], ar:["تيشيرت واسع","قطن ثقيل بقصّة واسعة وأكتاف منسدلة."]},
+  {id:4, cat:"women", type:"dress", price:18500, badge:"new", colors:["terracotta","sage","lilac"], sizes:ADULT,
+   en:["Summer kaftan dress","Lightweight viscose, tie waist and an easy midi length."], ar:["فستان قفطان صيفي","فسكوز خفيف بحزام للخصر وطول متوسط مريح."]},
+  {id:5, cat:"men", type:"hoodie", price:12000, colors:["grey","navy","clay"], sizes:ADULT,
+   en:["Everyday hoodie","Brushed fleece inside, kangaroo pocket, double-layer hood."], ar:["هودي يومي","فليس ناعم من الداخل وجيب أمامي وقبعة بطبقتين."]},
+  {id:6, cat:"women", type:"trousers", price:11500, colors:["beige","black"], sizes:ADULT,
+   en:["Wide-leg trousers","High rise, pleated front and a fluid drape."], ar:["بنطال واسع","خصر عالٍ مع ثنيات أمامية وانسدال ناعم."]},
+  {id:7, cat:"women", type:"abaya", price:32000, was:38000, colors:["black","maroon"], sizes:ADULT,
+   en:["Embroidered abaya","Tonal embroidery along the sleeves and a matching sheila."], ar:["عباية مطرزة","تطريز بنفس اللون على الأكمام مع شيلة مطابقة."]},
+  {id:8, cat:"men", type:"jacket", price:19900, colors:["indigo","wash"], sizes:["S","M","L","XL"],
+   en:["Denim jacket","Rigid denim that softens with wear, two chest pockets."], ar:["جاكيت جينز","جينز متين يلين مع الاستخدام وجيبان على الصدر."]},
+  {id:9, cat:"kids", type:"tee", price:4500, colors:["yellow","pink","sky"], sizes:KIDS,
+   en:["Kids cotton tee","Soft organic cotton that survives the washing machine."], ar:["تيشيرت أطفال قطن","قطن عضوي ناعم يتحمّل الغسيل المتكرر."]},
+  {id:10, cat:"kids", type:"hoodie", price:8500, was:10000, colors:["sky","pink","grey"], sizes:KIDS,
+   en:["Kids zip hoodie","Easy zip, roomy pockets and a lined hood."], ar:["هودي أطفال بسحاب","سحاب سهل وجيوب واسعة وقبعة مبطنة."]},
+  {id:11, cat:"acc", type:"cap", price:5000, colors:["black","sand","olive"], sizes:ONE,
+   en:["Cotton cap","Washed cotton twill with an adjustable strap."], ar:["كاب قطن","قطن مغسول مع حزام قابل للتعديل."]},
+  {id:12, cat:"men", type:"trousers", price:13500, colors:["khaki","black"], sizes:["S","M","L","XL"],
+   en:["Cargo trousers","Relaxed cargo with six pockets and cuffed hems."], ar:["بنطال كارغو","بنطال مريح بستة جيوب وأطراف مثنية."]}
+];
+const CATS = ["all","women","men","kids","acc"];
+const GOVS = [
+  {id:"capital",fee:1000,en:"Capital",ar:"العاصمة"}, {id:"hawalli",fee:1000,en:"Hawalli",ar:"حولي"},
+  {id:"farwaniya",fee:1500,en:"Farwaniya",ar:"الفروانية"}, {id:"mubarak",fee:1500,en:"Mubarak Al-Kabeer",ar:"مبارك الكبير"},
+  {id:"ahmadi",fee:2000,en:"Ahmadi",ar:"الأحمدي"}, {id:"jahra",fee:2000,en:"Jahra",ar:"الجهراء"}
+];
+const SLOTS = [
+  {id:"tomorrow-am", en:["Tomorrow","9 am – 1 pm"], ar:["غداً","9 ص – 1 م"]},
+  {id:"tomorrow-pm", en:["Tomorrow","4 pm – 9 pm"], ar:["غداً","4 م – 9 م"]},
+  {id:"express", fee:2000, en:["Express","Within 3 hours"], ar:["توصيل سريع","خلال 3 ساعات"]}
+];
+const PAYS = [
+  {id:"knet", en:["KNET","Kuwaiti debit cards"], ar:["كي نت","بطاقات السحب الكويتية"]},
+  {id:"card", en:["Visa / Mastercard","Credit and debit cards"], ar:["فيزا / ماستركارد","بطاقات الائتمان والسحب"]},
+  {id:"cod", en:["Cash on delivery","Pay the driver by cash or card"], ar:["الدفع عند الاستلام","ادفع للمندوب نقداً أو بالبطاقة"]}
+];
+const CODES = { NUVAREI10:{type:"pct",value:10}, FREESHIP:{type:"ship"} };
+
+/* ---------- Text ---------- */
+const S = {
+  en:{
+    ribbon:"Demo store built by NUVAREI — no real orders or payments.", ribbon_back:"← Back to NUVAREI",
+    hero_kicker:"New season", hero_h:"The linen edit", hero_p:"Light layers, modest cuts and everyday basics made for Gulf summers.", hero_cta:"Shop the collection",
+    perk1:"Free delivery over 20 KD", perk2:"KNET & cards", perk3:"14-day returns",
+    all:"All", women:"Women", men:"Men", kids:"Kids", acc:"Accessories", items:n=>n===1?"1 item":n+" items",
+    sort:"Sort", sort_featured:"Featured", sort_low:"Price: low to high", sort_high:"Price: high to low",
+    new:"New", sale:"Sale", colour:"Colour", size:"Size", add:"Add to bag", pick_size:"Choose a size first.", added:"Added to your bag",
+    cart:"Your bag", empty:"Your bag is empty.", browse:"Browse the collection", remove:"Remove", subtotal:"Subtotal",
+    ship_left:a=>"Add <b>"+a+"</b> more for free delivery", ship_free:"<b>Free delivery</b> unlocked", to_checkout:"Checkout", taxes:"Delivery calculated at checkout.",
+    continue:"← Continue shopping", checkout:"Checkout", co_contact:"Contact", co_delivery:"Delivery address", co_payment:"Payment",
+    f_name:"Full name", f_phone:"Mobile", f_email:"Email", optional:"(optional)", f_gov:"Governorate", f_area:"Area", f_block:"Block", f_street:"Street", f_house:"House / building", f_notes:"Delivery notes", f_slot:"Delivery time", choose:"Choose…",
+    pay_note:"This is a demo: you won't be asked for card details and nothing is charged. In a live store, KNET and card payments open the bank's secure payment page.",
+    summary:"Order summary", promo:"Discount code", apply:"Apply", promo_hint:"Try the codes <code>NUVAREI10</code> or <code>FREESHIP</code>.",
+    promo_pct:v=>v+"% off applied", promo_ship:"Free delivery applied", promo_bad:"That code isn't valid.", promo_removed:"Code removed",
+    discount:"Discount", delivery:"Delivery", express:"Express", free:"Free", select_gov:"Choose governorate", total:"Total", place:"Place order",
+    e_req:"Required", e_phone:"Enter an 8-digit Kuwaiti mobile number", e_email:"Enter a valid email", e_form:"Please fix the highlighted fields.",
+    done_h:"Thank you, your order is confirmed", done_p:"We've sent a confirmation by SMS. Your order is being packed.", order_no:"Order",
+    d_items:"Items", d_total:"Total paid", d_pay:"Payment", d_to:"Deliver to", d_when:"Delivery", demo_done:"Demo only — no order was placed and nothing was charged.",
+    keep:"Keep shopping", talk:"Get a store like this",
+    foot:"NOOR Wear is a fictional brand. This store is a demo built by NUVAREI.", foot_cta:"Want a store like this? Talk to NUVAREI →",
+    close:"Close", cart_label:"Cart", night:"Night mode", qty:"Quantity", dec:"Decrease", inc:"Increase", kd:"KD"
+  },
+  ar:{
+    ribbon:"متجر تجريبي من تصميم NUVAREI — لا توجد طلبات أو مدفوعات حقيقية.", ribbon_back:"العودة إلى NUVAREI →",
+    hero_kicker:"الموسم الجديد", hero_h:"مجموعة الكتان", hero_p:"طبقات خفيفة وقصّات محتشمة وأساسيات يومية مصممة لصيف الخليج.", hero_cta:"تسوّق المجموعة",
+    perk1:"توصيل مجاني فوق 20 د.ك", perk2:"كي نت والبطاقات", perk3:"إرجاع خلال 14 يوماً",
+    all:"الكل", women:"نساء", men:"رجال", kids:"أطفال", acc:"إكسسوارات", items:n=>n===1?"منتج واحد":n+" منتجات",
+    sort:"الترتيب", sort_featured:"المميز", sort_low:"السعر: من الأقل", sort_high:"السعر: من الأعلى",
+    new:"جديد", sale:"تخفيض", colour:"اللون", size:"المقاس", add:"أضف إلى الحقيبة", pick_size:"اختر المقاس أولاً.", added:"تمت الإضافة إلى حقيبتك",
+    cart:"حقيبتك", empty:"حقيبتك فارغة.", browse:"تصفّح المجموعة", remove:"إزالة", subtotal:"المجموع الفرعي",
+    ship_left:a=>"أضف <b>"+a+"</b> للحصول على توصيل مجاني", ship_free:"حصلت على <b>توصيل مجاني</b>", to_checkout:"إتمام الشراء", taxes:"تُحسب رسوم التوصيل عند الدفع.",
+    continue:"→ متابعة التسوق", checkout:"إتمام الشراء", co_contact:"بيانات التواصل", co_delivery:"عنوان التوصيل", co_payment:"الدفع",
+    f_name:"الاسم الكامل", f_phone:"رقم الهاتف", f_email:"البريد الإلكتروني", optional:"(اختياري)", f_gov:"المحافظة", f_area:"المنطقة", f_block:"القطعة", f_street:"الشارع", f_house:"المنزل / المبنى", f_notes:"ملاحظات التوصيل", f_slot:"وقت التوصيل", choose:"اختر…",
+    pay_note:"هذا متجر تجريبي: لن يُطلب منك إدخال بيانات بطاقة ولن يتم خصم أي مبلغ. في المتجر الحقيقي تفتح مدفوعات كي نت والبطاقات صفحة الدفع الآمنة الخاصة بالبنك.",
+    summary:"ملخص الطلب", promo:"كود الخصم", apply:"تطبيق", promo_hint:"جرّب الكود <code>NUVAREI10</code> أو <code>FREESHIP</code>.",
+    promo_pct:v=>"تم تطبيق خصم "+v+"%", promo_ship:"تم تطبيق التوصيل المجاني", promo_bad:"هذا الكود غير صالح.", promo_removed:"تمت إزالة الكود",
+    discount:"الخصم", delivery:"التوصيل", express:"توصيل سريع", free:"مجاناً", select_gov:"اختر المحافظة", total:"الإجمالي", place:"تأكيد الطلب",
+    e_req:"مطلوب", e_phone:"أدخل رقم هاتف كويتي من 8 أرقام", e_email:"أدخل بريداً إلكترونياً صحيحاً", e_form:"يرجى تصحيح الحقول المحددة.",
+    done_h:"شكراً لك، تم تأكيد طلبك", done_p:"أرسلنا لك تأكيداً برسالة نصية. يتم الآن تجهيز طلبك.", order_no:"طلب رقم",
+    d_items:"المنتجات", d_total:"المبلغ المدفوع", d_pay:"طريقة الدفع", d_to:"التوصيل إلى", d_when:"موعد التوصيل", demo_done:"تجربة فقط — لم يتم إنشاء طلب ولم يُخصم أي مبلغ.",
+    keep:"متابعة التسوق", talk:"احصل على متجر مثل هذا",
+    foot:"NOOR Wear علامة تجارية خيالية. هذا المتجر نموذج تجريبي من تصميم NUVAREI.", foot_cta:"تريد متجراً مثل هذا؟ تواصل مع NUVAREI ←",
+    close:"إغلاق", cart_label:"السلة", night:"الوضع الليلي", qty:"الكمية", dec:"إنقاص", inc:"زيادة", kd:"د.ك"
+  }
+};
+
+/* ---------- Garment illustrations ---------- */
+const SHAPES = {
+  tee:{d:"M60 30 L85 20 Q100 34 115 20 L140 30 L172 62 L150 82 L138 72 L138 196 L62 196 L62 72 L50 82 L28 62 Z", x:"M62 186 H138"},
+  shirt:{d:"M62 30 L86 20 L100 40 L114 20 L138 30 L160 70 L176 168 L156 172 L140 92 L140 198 L60 198 L60 92 L44 172 L24 168 L40 70 Z", x:"M100 40 V198 M86 20 L92 44 L100 40 L108 44 L114 20", dots:[[100,70],[100,100],[100,130],[100,160]]},
+  hoodie:{d:"M70 34 Q70 6 100 6 Q130 6 130 34 L140 36 L162 74 L178 168 L158 172 L142 96 L142 196 L58 196 L58 96 L42 172 L22 168 L38 74 L60 36 Z", x:"M78 36 Q100 20 122 36 M92 38 V64 M108 38 V64 M72 146 H128 L120 182 H80 Z"},
+  dress:{d:"M80 16 L90 16 Q100 30 110 16 L120 16 L124 60 L118 84 L162 202 L38 202 L82 84 L76 60 Z", x:"M80 84 H120 M100 84 L92 110 M100 84 L108 110"},
+  abaya:{d:"M84 12 Q100 26 116 12 L134 20 L172 110 L150 120 L138 92 L150 210 L50 210 L62 92 L50 120 L28 110 L66 20 Z", x:"M100 24 V210 M150 120 L172 110 M50 120 L28 110"},
+  trousers:{d:"M58 16 L142 16 L152 206 L112 206 L100 72 L88 206 L48 206 Z", x:"M58 30 H142 M100 30 V72 M64 30 L72 60 M136 30 L128 60"},
+  jacket:{d:"M62 30 L86 18 L100 30 L114 18 L138 30 L162 70 L176 168 L156 172 L142 94 L142 190 L58 190 L58 94 L44 172 L24 168 L38 70 Z", x:"M100 30 V190 M86 18 L80 60 L100 92 L120 60 L114 18 M68 104 H90 V124 H68 Z M110 104 H132 V124 H110 Z M58 178 H142"},
+  cap:{d:"M38 136 Q38 62 100 58 Q162 62 162 136 Z M150 132 Q196 132 200 152 L140 152 Z", x:"M100 60 Q94 98 100 136 M66 76 Q78 104 80 136 M134 76 Q122 104 120 136", dots:[[100,58]]}
+};
+function art(type, hex){
+  const s = SHAPES[type];
+  const dots = (s.dots||[]).map(([cx,cy])=>`<circle cx="${cx}" cy="${cy}" r="3.2" fill="rgba(0,0,0,.25)"/>`).join("");
+  return `<svg viewBox="0 0 200 220" aria-hidden="true"><path d="${s.d}" fill="${hex}" stroke="rgba(120,120,120,.45)" stroke-width="1.5" stroke-linejoin="round"/><path d="${s.x}" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${dots}</svg>`;
+}
+
+/* ---------- State ---------- */
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let lang = (()=>{ try{ return localStorage.getItem('nv_lang')||'en'; }catch(e){ return 'en'; } })();
+let cart = store.get('nv_demo_cart', []).filter(l=>P.some(p=>p.id===l.id));
+let cat = "all", sortBy = "featured", promo = null, lastOrder = null;
+
+const $ = s=>document.querySelector(s);
+const t = (k,...a)=>{ const v=S[lang][k] ?? S.en[k]; return typeof v==="function" ? v(...a) : v; };
+const L = o=>o[lang] || o.en;
+const prod = id=>P.find(p=>p.id===id);
+const money = f=>`${(f/1000).toFixed(3)} ${t("kd")}`;
+const esc = s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function sizeLabel(s){ return s==="One size" ? (lang==="ar"?"مقاس واحد":"One size") : (lang==="ar" ? s.replace("Y"," سنوات") : s); }
+function toast(msg){ const el=$("#toast"); el.textContent=msg; el.classList.add("on"); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove("on"),1800); }
+
+/* ---------- Catalog ---------- */
+function renderCats(){
+  $("#cats").innerHTML = CATS.map(c=>`<button type="button" data-cat="${c}" aria-pressed="${c===cat}">${t(c)}</button>`).join("");
+}
+function renderGrid(){
+  let list = P.filter(p=>cat==="all"||p.cat===cat);
+  if(sortBy==="low") list=[...list].sort((a,b)=>a.price-b.price);
+  if(sortBy==="high") list=[...list].sort((a,b)=>b.price-a.price);
+  $("#catTitle").textContent = t(cat);
+  $("#catCount").textContent = t("items", list.length);
+  $("#grid").innerHTML = list.map(p=>{
+    const c0 = C[p.colors[0]].hex;
+    const badge = p.was ? `<span class="badge sale">${t("sale")}</span>` : p.badge ? `<span class="badge">${t(p.badge)}</span>` : "";
+    return `<button class="card" type="button" data-open="${p.id}">
+      <div class="art" style="--c:${c0}">${art(p.type,c0)}${badge}</div>
+      <h3>${esc(L(p)[0])}</h3>
+      <div class="price ${p.was?"on-sale":""}">${money(p.price)}${p.was?`<s>${money(p.was)}</s>`:""}</div>
+      <div class="dots">${p.colors.map(c=>`<i style="--c:${C[c].hex}" title="${esc(L(C[c]))}"></i>`).join("")}</div>
+    </button>`;
+  }).join("");
+}
+
+/* ---------- Product dialog ---------- */
+let sel = null;
+function openProduct(id){
+  const p = prod(id);
+  sel = {id, ci:0, size: p.sizes.length===1 ? p.sizes[0] : null, qty:1};
+  renderProduct();
+  $("#productDlg").showModal();
+}
+function renderProduct(){
+  const p = prod(sel.id), col = C[p.colors[sel.ci]];
+  $("#productBody").innerHTML = `
+    <div class="art" style="--c:${col.hex}">${art(p.type,col.hex)}</div>
+    <div class="info">
+      <div>
+        <h2 id="pTitle">${esc(L(p)[0])}</h2>
+        <div class="price ${p.was?"on-sale":""}" style="margin-top:6px;font-size:1.15rem">${money(p.price)}${p.was?`<s>${money(p.was)}</s>`:""}</div>
+      </div>
+      <p class="desc">${esc(L(p)[1])}</p>
+      <div>
+        <div class="opt-label">${t("colour")}: <span>${esc(L(col))}</span></div>
+        <div class="swatches">${p.colors.map((c,i)=>`<button type="button" data-ci="${i}" style="--c:${C[c].hex}" aria-label="${esc(L(C[c]))}" aria-pressed="${i===sel.ci}"></button>`).join("")}</div>
+      </div>
+      <div>
+        <div class="opt-label">${t("size")}</div>
+        <div class="sizes">${p.sizes.map(s=>`<button type="button" data-size="${s}" aria-pressed="${s===sel.size}">${sizeLabel(s)}</button>`).join("")}</div>
+      </div>
+      <div class="msg" id="pMsg" role="alert"></div>
+      <div class="buy">
+        <div class="stepper" role="group" aria-label="${t("qty")}"><button type="button" data-q="-1" aria-label="${t("dec")}">−</button><output>${sel.qty}</output><button type="button" data-q="1" aria-label="${t("inc")}">+</button></div>
+        <button class="btn" type="button" id="addBtn">${t("add")}</button>
+      </div>
+    </div>`;
+}
+$("#productBody").addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.ci!==undefined){ sel.ci=+b.dataset.ci; renderProduct(); b.blur(); $(`[data-ci="${sel.ci}"]`).focus(); }
+  else if(b.dataset.size){ sel.size=b.dataset.size; renderProduct(); $(`[data-size="${sel.size}"]`).focus(); }
+  else if(b.dataset.q){ sel.qty=Math.min(10,Math.max(1,sel.qty+ +b.dataset.q)); b.parentElement.querySelector("output").textContent=sel.qty; }
+  else if(b.id==="addBtn"){
+    if(!sel.size){ $("#pMsg").textContent=t("pick_size"); return; }
+    addToCart(sel.id, sel.ci, sel.size, sel.qty);
+    $("#productDlg").close();
+    openCart();
+  }
+});
+
+/* ---------- Cart ---------- */
+function saveCart(){ store.set('nv_demo_cart', cart); renderCount(); }
+function addToCart(id, ci, size, qty){
+  const key = `${id}|${ci}|${size}`;
+  const line = cart.find(l=>l.key===key);
+  if(line) line.qty = Math.min(10, line.qty+qty); else cart.push({key,id,ci,size,qty});
+  saveCart(); toast(t("added"));
+}
+const subtotal = ()=>cart.reduce((s,l)=>s+prod(l.id).price*l.qty,0);
+const itemCount = ()=>cart.reduce((s,l)=>s+l.qty,0);
+function renderCount(){
+  const n=itemCount(), el=$("#cartCount");
+  el.textContent=n; el.hidden=n===0;
+  $("#cartBtn").setAttribute("aria-label", `${t("cart_label")} (${t("items",n)})`);
+}
+function lineMeta(l){ const p=prod(l.id); return `${esc(L(C[p.colors[l.ci]]))} · ${sizeLabel(l.size)}`; }
+function renderCart(){
+  if(!cart.length){
+    $("#cartLines").innerHTML = `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><p>${t("empty")}</p><button class="btn ghost" type="button" data-browse style="margin-top:16px">${t("browse")}</button></div>`;
+    $("#cartFoot").hidden = true; return;
+  }
+  $("#cartFoot").hidden = false;
+  $("#cartLines").innerHTML = cart.map(l=>{
+    const p=prod(l.id), hex=C[p.colors[l.ci]].hex;
+    return `<div class="line">
+      <div class="art" style="--c:${hex}">${art(p.type,hex)}</div>
+      <div><h3>${esc(L(p)[0])}</h3><div class="meta">${lineMeta(l)}</div>
+        <div class="stepper sm" role="group" aria-label="${t("qty")}"><button type="button" data-k="${l.key}" data-d="-1" aria-label="${t("dec")}">−</button><output>${l.qty}</output><button type="button" data-k="${l.key}" data-d="1" aria-label="${t("inc")}">+</button></div>
+      </div>
+      <div class="end"><span class="price">${money(p.price*l.qty)}</span><button class="remove" type="button" data-rm="${l.key}">${t("remove")}</button></div>
+    </div>`;
+  }).join("");
+  const sub=subtotal(), left=Math.max(0,FREE_SHIP-sub);
+  $("#cartFoot").innerHTML = `
+    <div class="ship-meter">${left ? t("ship_left", money(left)) : t("ship_free")}<div class="meter"><i style="width:${Math.min(100,sub/FREE_SHIP*100)}%"></i></div></div>
+    <div class="row total"><span>${t("subtotal")}</span><span>${money(sub)}</span></div>
+    <div style="font-size:.82rem;color:var(--muted);margin-top:-6px">${t("taxes")}</div>
+    <a class="btn block" href="#checkout" data-go-checkout>${t("to_checkout")}</a>`;
+}
+function openCart(){ renderCart(); if(!$("#cartDlg").open) $("#cartDlg").showModal(); }
+$("#cartDlg").addEventListener("click", e=>{
+  const b = e.target.closest("button,a"); if(!b) return;
+  if(b.dataset.d){ const l=cart.find(x=>x.key===b.dataset.k); l.qty+= +b.dataset.d; if(l.qty<1) cart=cart.filter(x=>x!==l); l.qty=Math.min(10,l.qty); saveCart(); renderCart(); }
+  else if(b.dataset.rm){ cart=cart.filter(x=>x.key!==b.dataset.rm); saveCart(); renderCart(); }
+  else if(b.hasAttribute("data-browse")){ $("#cartDlg").close(); location.hash="shop"; }
+  else if(b.hasAttribute("data-go-checkout")){ $("#cartDlg").close(); }
+});
+
+/* ---------- Checkout ---------- */
+const val = id=>$("#"+id).value.trim();
+function pricing(){
+  const sub = subtotal();
+  const disc = promo?.type==="pct" ? Math.round(sub*promo.value/100) : 0;
+  const gov = GOVS.find(g=>g.id===$("#cGov").value);
+  const slot = SLOTS.find(s=>s.id===(document.querySelector('[name="slot"]:checked')||{}).value) || SLOTS[0];
+  const freeShip = promo?.type==="ship" || sub-disc >= FREE_SHIP;
+  const ship = gov ? (freeShip ? 0 : gov.fee) : null;
+  const express = slot.fee || 0;
+  return {sub, disc, ship, express, total: sub - disc + (ship||0) + express, gov, slot};
+}
+function renderOptions(){
+  const gov = $("#cGov").value;
+  $("#cGov").innerHTML = `<option value="">${t("choose")}</option>` + GOVS.map(g=>`<option value="${g.id}">${L(g)}</option>`).join("");
+  $("#cGov").value = gov;
+  const slot = (document.querySelector('[name="slot"]:checked')||{}).value || SLOTS[0].id;
+  $("#slots").innerHTML = SLOTS.map(s=>`<label class="opt"><input type="radio" name="slot" value="${s.id}" ${s.id===slot?"checked":""}><span><strong>${L(s)[0]}</strong><small>${L(s)[1]}</small></span>${s.fee?`<span class="tag">+${money(s.fee)}</span>`:""}</label>`).join("");
+  const pay = (document.querySelector('[name="pay"]:checked')||{}).value || PAYS[0].id;
+  $("#pays").innerHTML = PAYS.map(p=>`<label class="opt"><input type="radio" name="pay" value="${p.id}" ${p.id===pay?"checked":""}><span><strong>${L(p)[0]}</strong><small>${L(p)[1]}</small></span></label>`).join("");
+}
+function renderSummary(){
+  $("#sumLines").innerHTML = cart.map(l=>{
+    const p=prod(l.id), hex=C[p.colors[l.ci]].hex;
+    return `<div class="sum-line"><div class="art" style="--c:${hex}">${art(p.type,hex)}</div><div><strong>${esc(L(p)[0])}</strong> × ${l.qty}<div class="meta">${lineMeta(l)}</div></div><span>${money(p.price*l.qty)}</span></div>`;
+  }).join("");
+  const x = pricing();
+  $("#totals").innerHTML = `
+    <div class="row"><span>${t("subtotal")}</span><span>${money(x.sub)}</span></div>
+    ${x.disc?`<div class="row disc"><span>${t("discount")} (${promo.code})</span><span>−${money(x.disc)}</span></div>`:""}
+    <div class="row"><span>${t("delivery")}</span><span>${x.ship===null?`<small style="color:var(--muted)">${t("select_gov")}</small>`:x.ship===0?t("free"):money(x.ship)}</span></div>
+    ${x.express?`<div class="row"><span>${t("express")}</span><span>${money(x.express)}</span></div>`:""}
+    <div class="row total" style="margin-top:6px"><span>${t("total")}</span><span>${money(x.total)}</span></div>`;
+}
+$("#promoBtn").addEventListener("click", ()=>{
+  const code = val("promo").toUpperCase(), m = $("#promoMsg");
+  if(!code){ if(promo){ promo=null; m.className="promo-msg"; m.textContent=t("promo_removed"); renderSummary(); } return; }
+  const c = CODES[code];
+  if(!c){ promo=null; m.className="promo-msg bad"; m.textContent=t("promo_bad"); }
+  else { promo={...c, code}; m.className="promo-msg ok"; m.textContent = c.type==="pct" ? t("promo_pct",c.value) : t("promo_ship"); }
+  renderSummary();
+});
+$("#promo").addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); $("#promoBtn").click(); } });
+$("#coForm").addEventListener("change", e=>{ if(["gov","slot"].includes(e.target.name)) renderSummary(); });
+$("#cPhone").addEventListener("input", e=>{ const d=e.target.value.replace(/\D/g,"").slice(0,8); e.target.value = d.length>4 ? d.slice(0,4)+" "+d.slice(4) : d; });
+$("#coForm").addEventListener("input", e=>{ const f=e.target.closest(".f"); if(f && e.target.getAttribute("aria-invalid")==="true"){ e.target.removeAttribute("aria-invalid"); f.querySelector(".err").textContent=""; } });
+
+function validate(){
+  const rules = [
+    ["cName", v=>v?"":t("e_req")],
+    ["cPhone", v=>/^[569]\d{7}$/.test(v.replace(/\s/g,""))?"":t("e_phone")],
+    ["cEmail", v=>!v||/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)?"":t("e_email")],
+    ["cGov", v=>v?"":t("e_req")], ["cArea", v=>v?"":t("e_req")], ["cBlock", v=>v?"":t("e_req")],
+    ["cStreet", v=>v?"":t("e_req")], ["cHouse", v=>v?"":t("e_req")]
+  ];
+  let first = null;
+  for(const [id,check] of rules){
+    const el=$("#"+id), msg=check(el.value.trim()), err=el.closest(".f").querySelector(".err");
+    err.textContent = msg;
+    if(msg){ el.setAttribute("aria-invalid","true"); first ||= el; } else el.removeAttribute("aria-invalid");
+  }
+  return first;
+}
+$("#coForm").addEventListener("submit", e=>{
+  e.preventDefault();
+  const bad = validate();
+  if(bad){ $("#formMsg").textContent=t("e_form"); bad.focus(); return; }
+  $("#formMsg").textContent="";
+  const x = pricing();
+  const pay = PAYS.find(p=>p.id===document.querySelector('[name="pay"]:checked').value);
+  lastOrder = {
+    ref: "NW-" + String(Math.floor(10000+Math.random()*90000)),
+    count: itemCount(), total: x.total, pay, slot: x.slot,
+    addr: {gov:x.gov, area:val("cArea"), block:val("cBlock"), street:val("cStreet"), house:val("cHouse")}
+  };
+  cart = []; promo = null; saveCart();
+  $("#coForm").reset(); $("#promoMsg").textContent="";
+  location.hash = "done";
+});
+
+/* ---------- Confirmation ---------- */
+function renderDone(){
+  const o = lastOrder;
+  const a = o.addr;
+  const addr = lang==="ar"
+    ? `${esc(a.area)}، قطعة ${esc(a.block)}، شارع ${esc(a.street)}، منزل ${esc(a.house)} — ${L(a.gov)}`
+    : `Block ${esc(a.block)}, Street ${esc(a.street)}, House ${esc(a.house)}, ${esc(a.area)} — ${L(a.gov)}`;
+  $("#donePanel").innerHTML = `
+    <div class="tick"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1 tabindex="-1" id="doneH">${t("done_h")}</h1>
+    <p style="color:var(--muted)">${t("done_p")}</p>
+    <div class="ref">${t("order_no")} ${o.ref}</div>
+    <dl>
+      <dt>${t("d_items")}</dt><dd>${t("items",o.count)}</dd>
+      <dt>${t("d_total")}</dt><dd>${money(o.total)}</dd>
+      <dt>${t("d_pay")}</dt><dd>${L(o.pay)[0]}</dd>
+      <dt>${t("d_to")}</dt><dd>${addr}</dd>
+      <dt>${t("d_when")}</dt><dd>${L(o.slot).join(" · ")}</dd>
+    </dl>
+    <div class="note" style="justify-content:center;margin-top:22px">${t("demo_done")}</div>
+    <div class="actions"><a class="btn" href="#shop">${t("keep")}</a><a class="btn ghost" href="./#apply">${t("talk")}</a></div>`;
+}
+
+/* ---------- Views ---------- */
+function route(){
+  const h = location.hash.slice(1);
+  let view = "shop";
+  if(h==="checkout" && cart.length) view="checkout";
+  else if(h==="done" && lastOrder) view="done";
+  else if(h==="checkout" || h==="done"){ history.replaceState(null,"",location.pathname); }
+  $("#viewShop").hidden = view!=="shop";
+  $("#viewCheckout").hidden = view!=="checkout";
+  $("#viewDone").hidden = view!=="done";
+  if(view==="checkout"){ renderOptions(); renderSummary(); scrollTo(0,0); }
+  else if(view==="done"){ renderDone(); scrollTo(0,0); $("#doneH").focus(); }
+  else if(h==="shop"){ $("#shop").scrollIntoView(); }
+  else scrollTo(0,0);
+}
+addEventListener("hashchange", route);
+$("#backToShop").addEventListener("click", ()=>{ location.hash="shop"; });
+$("#home").addEventListener("click", e=>{ e.preventDefault(); cat="all"; renderCats(); renderGrid(); history.pushState(null,"",location.pathname); route(); });
+
+/* ---------- Wiring ---------- */
+$("#cats").addEventListener("click", e=>{ const b=e.target.closest("[data-cat]"); if(!b) return; cat=b.dataset.cat; renderCats(); renderGrid(); if(!$("#viewShop").hidden) $("#shop").scrollIntoView({behavior:"smooth"}); else location.hash="shop"; });
+$("#sort").addEventListener("change", e=>{ sortBy=e.target.value; renderGrid(); });
+$("#grid").addEventListener("click", e=>{ const c=e.target.closest("[data-open]"); if(c) openProduct(+c.dataset.open); });
+$("#cartBtn").addEventListener("click", openCart);
+document.querySelectorAll("dialog").forEach(d=>{
+  d.addEventListener("click", e=>{ if(e.target===d || e.target.closest("[data-close]")) d.close(); });
+});
+$("#heroCta").addEventListener("click", e=>{ e.preventDefault(); $("#shop").scrollIntoView({behavior:"smooth"}); });
+
+/* ---------- Theme & language (shared with the NUVAREI site) ---------- */
+const themeBtn = $("#themeBtn");
+function applyTheme(th){
+  document.documentElement.dataset.theme = th;
+  themeBtn.setAttribute("aria-pressed", th==="dark");
+  themeBtn.setAttribute("aria-label", t("night"));
+}
+themeBtn.addEventListener("click", ()=>{
+  const th = document.documentElement.dataset.theme==="dark" ? "light" : "dark";
+  applyTheme(th);
+  try{ localStorage.setItem("nv_theme", th); }catch(e){}
+});
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==="ar" ? "rtl" : "ltr";
+  document.querySelectorAll("[data-t]").forEach(el=>{ el.innerHTML = t(el.dataset.t); });
+  document.querySelectorAll("[data-t-ph]").forEach(el=>{ el.placeholder = t(el.dataset.tPh); });
+  document.querySelectorAll("[data-close]").forEach(el=>el.setAttribute("aria-label", t("close")));
+  $("#cats").setAttribute("aria-label", lang==="ar" ? "الأقسام" : "Categories");
+  $("#langBtn").textContent = lang==="ar" ? "English" : "العربية";
+  $("#heroArt").innerHTML = art("abaya", C.sand.hex) + art("shirt", C.sky.hex);
+  applyTheme(document.documentElement.dataset.theme);
+  renderCats(); renderGrid(); renderCount();
+  if($("#productDlg").open) renderProduct();
+  if($("#cartDlg").open) renderCart();
+  if(!$("#viewCheckout").hidden){ renderOptions(); renderSummary(); }
+  if(!$("#viewDone").hidden) renderDone();
+}
+$("#langBtn").addEventListener("click", ()=>{
+  lang = lang==="ar" ? "en" : "ar";
+  try{ localStorage.setItem("nv_lang", lang); }catch(e){}
+  applyLang();
+});
+
+applyLang();
+route();
+</script>
+</body>
+</html>

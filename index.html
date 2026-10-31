@@ -127,6 +127,8 @@
   .svc li{font-size:.85rem;background:var(--paper);padding:5px 11px;border-radius:999px;color:var(--navy);font-weight:600}
   .svc .link{margin-top:auto;font-weight:700;color:var(--violet);text-decoration:none}
   .svc .link:hover{text-decoration:underline}
+  .svc-links{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px 22px}
+  .svc-links .link{margin-top:0}
 
   /* Industries */
   .industries{background:var(--white)}
@@ -310,7 +312,7 @@
         <h3 data-i="svc3_h">Online stores</h3>
         <p data-i="svc3_p">Sell clothing, perfume, food or electronics with product variants, delivery zones, discount codes and local payment gateways.</p>
         <ul><li data-i="svc3_t1">Product catalog</li><li>KNET</li><li data-i="svc3_t2">Delivery tracking</li><li data-i="svc3_t3">Instagram-ready</li></ul>
-        <a class="link" href="#apply" data-svc="store" data-i="svc_link">Request this service</a>
+        <div class="svc-links"><a class="link" href="demo-store.html" data-i="svc3_demo">Try the demo store →</a><a class="link" href="#apply" data-svc="store" data-i="svc_link">Request this service</a></div>
       </article>
       <article class="svc">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 14l3-3 2 2 3-4"/></svg></div>
@@ -501,7 +503,7 @@ const AR = {
   svc2_h:"تطبيقات الويب", svc2_p:"أدوات مخصصة تعمل في المتصفح وعلى أي هاتف — بوابات عملاء، لوحات تحكم داخلية، وأنظمة طلبات وصيانة.", svc2_t1:"بوابات عملاء", svc2_t2:"لوحات تحكم", svc2_t3:"قابل للتثبيت على الهاتف",
   svc3_h:"المتاجر الإلكترونية", svc3_p:"بِع الملابس والعطور والأغذية والإلكترونيات مع خيارات المنتجات ومناطق التوصيل وأكواد الخصم وبوابات الدفع المحلية.", svc3_t1:"كتالوج منتجات", svc3_t2:"تتبع التوصيل", svc3_t3:"جاهز لإنستغرام",
   svc4_h:"أنظمة المحاسبة", svc4_p:"فواتير ومصروفات ومخزون وتقارير جاهزة للضريبة وصورة واضحة للأرباح — بالعربية والإنجليزية ومرتبطة بمتجرك.", svc4_t1:"الفوترة", svc4_t2:"المخزون", svc4_t3:"تتبع المصروفات", svc4_t4:"التقارير",
-  svc_link:"اطلب هذه الخدمة",
+  svc_link:"اطلب هذه الخدمة", svc3_demo:"جرّب المتجر التجريبي ←",
   ind_h2:"مبني حول طريقة بيع قطاعك فعلاً", ind_lead:"لا نبدأ من قالب فارغ. كل قطاع يحصل على الميزات التي يحتاجها من اليوم الأول.",
   ind1_h:"الملابس", ind1_p:"المقاسات والألوان والمجموعات الموسمية والإرجاع.", ind2_h:"العطور", ind2_p:"أحجام العبوات وأطقم الهدايا والعينات وفلاتر الروائح.", ind3_h:"الأغذية", ind3_p:"القوائم والطلب المسبق ومواعيد التوصيل والاشتراكات.", ind4_h:"الإلكترونيات", ind4_p:"مقارنة المواصفات والضمانات وتتبع الأرقام التسلسلية والتقسيط.",
   pro_h2:"من أول رسالة إلى الإطلاق في أربع خطوات", pro_lead:"تعرف دائماً ما يحدث وما الخطوة التالية.",
